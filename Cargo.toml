@@ -1,0 +1,15 @@
+[package]
+name = "firefly-test"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "firefly_test"
+crate-type = ["cdylib"]
+
+[dependencies]
+firefly-device = { path = "../firefly-device" }
+firefly-runtime = { path = "../firefly-runtime" }
+embedded-graphics = "0.8.1"
+pyo3 = "0.22.0"
+heapless = "0.8.0"
