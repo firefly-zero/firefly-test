@@ -1,14 +1,12 @@
 from __future__ import annotations
 
 from pathlib import Path
+
 import firefly_test._rust as rust
+from firefly_test._frame import Frame
 
 
-class Frame:
-    __slots__ = ('_frame', )
-
-
-class Runner:
+class Firefly:
     __slots__ = ('_runner', '_author_id', '_app_id', '_vfs_path')
     _runner: rust.Runner
     _author_id: str

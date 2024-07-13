@@ -23,10 +23,11 @@ impl Runner {
             return Err(PyTypeError::new_err("invalid app_id"));
         };
         let id = FullID::new(author_id, app_id);
+        let display = MockDisplay::new();
         let config = RuntimeConfig {
             id: Some(id),
             device,
-            display: todo!(),
+            display,
             net_handler: NetHandler::None,
         };
         let runtime = match Runtime::new(config) {
@@ -37,6 +38,24 @@ impl Runner {
             runtime: Box::new(runtime),
         };
         Ok(runner)
+    }
+
+    fn start(&mut self) -> PyResult<()> {
+        match self.runtime.start() {
+            Ok(()) => Ok(()),
+            Err(err) => Err(PyRuntimeError::new_err(err.to_string())),
+        }
+    }
+
+    fn update(&mut self) -> PyResult<bool> {
+        match self.runtime.update() {
+            Ok(exit) => Ok(exit),
+            Err(err) => Err(PyRuntimeError::new_err(err.to_string())),
+        }
+    }
+
+    fn get_frame(&self) -> Vec<u32> {
+        self.runtime.display().buf.into()
     }
 }
 

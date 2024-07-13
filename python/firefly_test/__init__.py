@@ -1,4 +1,7 @@
+"""Framework for testing Firefly Zero apps.
+"""
+from ._frame import Frame
+from ._runner import Firefly
 
-from ._runner import Runner
 
-__all__ = ['Runner']
+__all__ = ['Firefly', 'Frame']

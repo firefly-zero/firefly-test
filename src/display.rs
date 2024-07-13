@@ -1,12 +1,17 @@
 use embedded_graphics::pixelcolor::Rgb888;
-use embedded_graphics::prelude::{Dimensions, DrawTarget, OriginDimensions, Point, Size};
-use embedded_graphics::primitives::Rectangle;
+use embedded_graphics::prelude::{DrawTarget, OriginDimensions, Point, RgbColor, Size};
 use firefly_runtime::{HEIGHT, WIDTH};
 use std::convert::Infallible;
 const BUF_SIZE: usize = WIDTH * HEIGHT;
 
 pub(crate) struct MockDisplay {
-    buf: [Rgb888; BUF_SIZE],
+    pub buf: [u32; BUF_SIZE],
+}
+
+impl MockDisplay {
+    pub fn new() -> Self {
+        Self { buf: [0; BUF_SIZE] }
+    }
 }
 
 impl OriginDimensions for MockDisplay {
