@@ -1,15 +1,42 @@
+mod display;
+use display::MockDisplay;
+use embedded_graphics::pixelcolor::Rgb888;
+use firefly_device::*;
+use firefly_runtime::*;
+use pyo3::exceptions::{PyRuntimeError, PyTypeError};
 use pyo3::prelude::*;
 
 #[pyclass]
 struct Runner {
-    id: String,
+    runtime: Box<Runtime<MockDisplay, Rgb888>>,
 }
 
 #[pymethods]
 impl Runner {
     #[new]
-    fn new(id: String) -> Self {
-        Runner { id }
+    fn new(author_id: String, app_id: String, vfs_path: String) -> PyResult<Self> {
+        let device = DeviceImpl::new(vfs_path.into());
+        let Ok(author_id) = heapless::String::<16>::try_from(author_id.as_str()) else {
+            return Err(PyTypeError::new_err("invalid author_id"));
+        };
+        let Ok(app_id) = heapless::String::<16>::try_from(app_id.as_str()) else {
+            return Err(PyTypeError::new_err("invalid app_id"));
+        };
+        let id = FullID::new(author_id, app_id);
+        let config = RuntimeConfig {
+            id: Some(id),
+            device,
+            display: todo!(),
+            net_handler: NetHandler::None,
+        };
+        let runtime = match Runtime::new(config) {
+            Ok(runtime) => runtime,
+            Err(err) => return Err(PyRuntimeError::new_err(err.to_string())),
+        };
+        let runner = Self {
+            runtime: Box::new(runtime),
+        };
+        Ok(runner)
     }
 }
 
