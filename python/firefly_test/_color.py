@@ -53,6 +53,7 @@ class Color:
     _raw: int
 
     def __init__(self, raw: int) -> None:
+        assert 0x000000 <= raw <= 0xFFFFFF
         self._raw = raw
 
     @property
@@ -94,6 +95,7 @@ class Color:
         if isinstance(other, Color):
             return self._raw == other._raw
         if isinstance(other, int):
+            assert 0x000000 <= other <= 0xFFFFFF
             return self._raw == other
         return NotImplemented
 

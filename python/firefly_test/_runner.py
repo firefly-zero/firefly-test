@@ -34,9 +34,12 @@ class Firefly:
         vfs_path: Path,
     ) -> None:
         if isinstance(id, str):
-            left, _sep, right = id.partition('.')
+            left, sep, right = id.partition('.')
+            assert sep == '.'
             id = (left, right)
         self._author_id, self._app_id = id
+        assert 0 < len(self._author_id) <= 16
+        assert 0 < len(self._app_id) <= 16
         self._vfs_path = vfs_path
         self._started = False
         self._exited = False
@@ -65,4 +68,4 @@ class Firefly:
     @property
     def frame(self) -> Frame:
         buf = self._runner.get_frame()
-        return Frame(buf)
+        return Frame(buf, width=240)
