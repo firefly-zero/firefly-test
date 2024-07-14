@@ -96,7 +96,10 @@ class Color:
         return NotImplemented
 
     def __repr__(self) -> str:
-        return f'{type(self).__name__}(0x{self._raw:06X})'
+        try:
+            return f'{type(self).__name__}(0x{self._raw:06X})'
+        except AttributeError:
+            return f'{type(self).__name__}(???)'
 
     def __str__(self) -> str:
         return f'#{self._raw:06X}'

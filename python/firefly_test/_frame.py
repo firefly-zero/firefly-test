@@ -31,21 +31,27 @@ class Frame:
     _buf: list[int]
     _width: int
 
-    def __init__(self, buf: list[int], width: int) -> None:
+    def __init__(self, buf: list[int], *, width: int) -> None:
         self._buf = buf
         assert 0 <= width <= WIDTH
         assert 0 < len(buf) <= WIDTH * HEIGHT
+        assert type(buf[0]) is int
         self._width = width
 
     @property
     def width(self) -> int:
-        return self.width
+        return self._width
 
     @property
     def height(self) -> int:
-        return len(self._buf) // self.width
+        return len(self._buf) // self._width
 
     def at(self, x: int, y: int | None = None) -> Color:
+        """Get the color of the pixel with the given coordinates.
+
+        Can accept either x and y or a flat single number index of the pixel
+        in the frame buffer array.
+        """
         if y:
             assert 0 <= x < self.width
             assert 0 < y < self.height
@@ -60,6 +66,8 @@ class Frame:
         height: int | None = None,
     ) -> Self:
         """Get a subregion of the frame.
+
+        The region must be fully within the frame.
         """
         if width is None:
             width = self.width - x
@@ -69,18 +77,16 @@ class Frame:
         assert 0 <= y < self.height
         assert 0 <= width < self.width
         assert 0 <= height < self.height
-        assert 0 <= x + width < self.width
-        assert 0 <= x + height < self.height
+        assert 0 <= x + width <= self.width
+        assert 0 <= x + height <= self.height
 
-        start = y * self._width + x
-        size = self._width * height
-        buf = self._buf[start:]
-        buf = buf[:size]
         res_buf = []
-        for i in range(0, len(buf), self._width):
-            line = buf[i:i+width]
+        for line_no in range(y, y + height):
+            start = line_no * self._width + x
+            end = start + width
+            line = self._buf[start:end]
             res_buf.extend(line)
-        return type(self)(buf, width=width)
+        return type(self)(res_buf, width=width)
 
     def to_dict(self) -> dict[Color, int]:
         """Get the dict of how many pixels of each color the frame has.
@@ -107,30 +113,35 @@ class Frame:
         """
         return (Color(pixel) for pixel in self._buf)
 
-    def __contains__(self, val: Color | int | str) -> bool:
+    def __contains__(self, val: object) -> bool:
         if isinstance(val, int):
             assert 0x000000 <= val <= 0xFFFFFF
             return val in self._buf
         if isinstance(val, Color):
-            return val in self
-        raise TypeError
+            return val in self.__iter__()
+        t = type(val).__name__
+        raise TypeError(f'Frame can contain only Color, not {t}')
 
     def __getitem__(self, i: int | tuple[int, int]) -> Color:
         if isinstance(i, tuple):
             x, y = i
+            if x >= self._width:
+                raise IndexError('x is out of range')
             i = y * self._width + x
-        return Color(self._buf[y])
+        return Color(self._buf[i])
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, str):
-            for i, pattern in enumerate(other.splitlines()):
+            patterns = [p.strip() for p in other.splitlines()]
+            patterns = [p for p in patterns if p]
+            for i, pattern in enumerate(patterns):
                 if not self._check_line(i, pattern):
                     return False
             return True
         return NotImplemented
 
-    def __repr__(self) -> str:
-        """Make a repr that will give a nice diff in pytest.
+    def __str__(self) -> str:
+        """Represent the frame as a pattern.
         """
         res = ''
         for i in range(0, len(self._buf), self._width):
@@ -150,5 +161,7 @@ class Frame:
         """
         pattern = ''.join(pattern.split())  # remove spaces
         assert 0 < len(pattern) <= self._width
-        line = self._buf[i:i+self._width]
+        start = i * self._width
+        end = start + self._width
+        line = self._buf[start:end]
         return all(Color(act) == exp for act, exp in zip(line, pattern))
