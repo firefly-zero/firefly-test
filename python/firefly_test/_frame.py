@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter
-from typing import Final, Iterator, Mapping, TYPE_CHECKING
+from typing import Final, Iterator, Mapping, TYPE_CHECKING, overload
 
 from ._color import Color, PAT_TO_COLOR
 
@@ -114,6 +114,8 @@ class Frame:
         return (Color(pixel) for pixel in self._buf)
 
     def __contains__(self, val: object) -> bool:
+        """Check if the Frame contains a pixel of the given Color.
+        """
         if isinstance(val, int):
             assert 0x000000 <= val <= 0xFFFFFF
             return val in self._buf
@@ -122,12 +124,26 @@ class Frame:
         t = type(val).__name__
         raise TypeError(f'Frame can contain only Color, not {t}')
 
+    @overload
     def __getitem__(self, i: int | tuple[int, int]) -> Color:
+        pass
+
+    # https://github.com/python/typeshed/issues/8647
+    @overload
+    def __getitem__(self, i: slice) -> Self:
+        pass
+
+    def __getitem__(self, i: int | tuple[int, int] | slice) -> Color | Self:
         if isinstance(i, tuple):
             x, y = i
             if x >= self._width:
                 raise IndexError('x is out of range')
             i = y * self._width + x
+        if isinstance(i, slice):
+            assert i.step is None
+            x, y = i.start
+            ex, ey = i.stop
+            return self.get_sub(x=x, y=y, width=ex - x, height=ey - y)
         return Color(self._buf[i])
 
     def __eq__(self, other: object) -> bool:

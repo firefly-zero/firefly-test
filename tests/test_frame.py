@@ -103,6 +103,16 @@ def test_getitem() -> None:
     assert type(f[6]) is Color
 
 
+def test_slice() -> None:
+    f = get_frame()
+    # https://github.com/python/typeshed/issues/8647
+    s = f[(1, 0):(4, 2)]  # type: ignore[misc]
+    assert s._buf == [
+        0x01, 0x02, 0x03,
+        0x11, 0x12, 0x13,
+    ]
+
+
 def test_eq() -> None:
     buf = [
         int(Color.BLACK), int(Color.RED), int(Color.GREEN),
