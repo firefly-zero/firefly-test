@@ -63,6 +63,16 @@ impl Runner {
     fn get_frame(&self) -> Vec<u32> {
         self.runtime.display().buf.into()
     }
+
+    fn set_input(&mut self, x: i16, y: i16, b: u8) {
+        let pad = if x == 0xFF && y == 0xFF {
+            Some(Pad { x, y })
+        } else {
+            None
+        };
+        let input = InputState { pad, buttons: b };
+        self.runtime.device_mut().update_input(input)
+    }
 }
 
 /// Get path to the virtual file system.

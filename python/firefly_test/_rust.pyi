@@ -26,3 +26,6 @@ class Runner:
 
     def get_frame(self) -> list[int]:
         pass
+
+    def set_input(self, x: int, y: int, b: int) -> None:
+        pass

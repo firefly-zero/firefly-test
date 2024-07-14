@@ -4,7 +4,8 @@ from pathlib import Path
 from typing import Iterator
 
 import firefly_test._rust as rust
-from firefly_test._frame import Frame
+from ._frame import Frame
+from ._input import Input
 
 
 class ExitedError(Exception):
@@ -66,13 +67,21 @@ class App:
         self._started = True
         self._runner.start()
 
-    def update(self) -> None:
+    def update(self, input: Input | None = None) -> None:
         """Run a single update cycle: call `update`, maybe `render`, render menu, etc.
+
+        If no input provided, the old input stays active.
         """
         if not self._started:
             raise RuntimeError('app must be started before it can be updated')
         if self._exited:
             raise RuntimeError('trying to update exited app')
+        if input is not None:
+            self._runner.set_input(
+                x=input._pad._x if input._pad else 0xFF,
+                y=input._pad._y if input._pad else 0xFF,
+                b=input._buttons,
+            )
         exit = self._runner.update()
         if exit:
             self._exited = True
