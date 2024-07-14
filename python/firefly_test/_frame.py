@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from collections import Counter
 from pathlib import Path
+import struct
 from typing import BinaryIO, Final, Iterator, Mapping, TYPE_CHECKING, overload
+import zlib
 
 from ._color import Color, PAT_TO_COLOR
 
@@ -168,6 +170,30 @@ class Frame:
         for pixel in self._buf:
             stream.write(pixel.to_bytes(4, _BYTE_ORDER))
 
+    def to_png(self, stream: BinaryIO | Path) -> None:
+        """Save the Frame as a PNG file.
+        """
+        if isinstance(stream, Path):
+            with stream.open('wb') as stream:
+                self.to_png(stream)
+                return
+        # https://gitlab.com/drj11/minpng/-/blob/main/minpng.py?ref_type=heads
+        stream.write(bytearray([137, 80, 78, 71, 13, 10, 26, 10]))
+        header = struct.pack(
+            ">2LBBBBB",
+            self.width,
+            self.height,
+            8, 2, 0, 0, 0,
+        )
+        write_chunk(stream, b"IHDR", header)
+        bs = bytearray()
+        for i in range(0, len(self._buf), self._width):
+            bs.append(0)
+            for pixel in self._buf[i:i+self._width]:
+                bs.extend(pixel.to_bytes(3, 'big'))
+        write_chunk(stream, b"IDAT", zlib.compress(bs))
+        write_chunk(stream, b"IEND", bytearray())
+
     def __iter__(self) -> Iterator[Color]:
         """Iterate over all pixels in the frame.
 
@@ -250,3 +276,17 @@ class Frame:
         end = start + self._width
         line = self._buf[start:end]
         return all(Color(act) == exp for act, exp in zip(line, pattern))
+
+
+def write_chunk(out: BinaryIO, chunk_type: bytes, data: bytes) -> None:
+    """Write a PNG chunk.
+
+    https://en.wikipedia.org/wiki/PNG
+    """
+    assert 4 == len(chunk_type)
+    out.write(struct.pack(">L", len(data)))
+    out.write(chunk_type)
+    out.write(data)
+    checksum = zlib.crc32(chunk_type)
+    checksum = zlib.crc32(data, checksum)
+    out.write(struct.pack(">L", checksum))
