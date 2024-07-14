@@ -25,6 +25,7 @@ This is the default height of Frame returned by Firefly.get_frame.
 _COLOR_TO_PAT: Final[Mapping[int, str]] = {
     v: k for k, v in PAT_TO_COLOR.items()
 }
+_BYTE_ORDER: Final = 'little'
 
 RED = '\033[31m'
 GREEN = '\033[32m'
@@ -139,6 +140,33 @@ class Frame:
                 msg += '\n'.join(report)
                 raise AssertionError(msg)
             return
+
+    @classmethod
+    def read(cls, stream: BinaryIO | Path) -> Self:
+        """Read from a file a Frame serialized with Frame.write.
+        """
+        if isinstance(stream, Path):
+            with stream.open('rb') as stream:
+                return cls.read(stream)
+        width = int.from_bytes(stream.read(2), _BYTE_ORDER)
+        buf = []
+        while True:
+            chunk = stream.read(4)
+            if len(chunk) != 4:
+                break
+            buf.append(int.from_bytes(chunk, _BYTE_ORDER))
+        return cls(buf, width=width)
+
+    def write(self, stream: BinaryIO | Path) -> None:
+        """Serialize the Frame into a file as a binary.
+        """
+        if isinstance(stream, Path):
+            with stream.open('wb') as stream:
+                self.write(stream)
+                return
+        stream.write(self._width.to_bytes(2, _BYTE_ORDER))
+        for pixel in self._buf:
+            stream.write(pixel.to_bytes(4, _BYTE_ORDER))
 
     def __iter__(self) -> Iterator[Color]:
         """Iterate over all pixels in the frame.

@@ -1,3 +1,4 @@
+from io import BytesIO
 import pytest
 from firefly_test import Color, Frame
 
@@ -58,6 +59,17 @@ def test_to_set() -> None:
     f = Frame([91, 92, 93, 92, 94, 91, 92, 95, 95], width=3)
     s = f.to_set()
     assert s == {91, 92, 93, 94, 95}
+
+
+def test_read_write_roundtrip() -> None:
+    f1 = get_frame()
+    buf = BytesIO()
+    f1.write(buf)
+    buf.seek(0)
+    f2 = Frame.read(buf)
+    assert f1._buf == f2._buf
+    assert f1._width == f2._width
+    assert f1 == f2
 
 
 def test_iter() -> None:
