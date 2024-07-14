@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections import Counter
 from typing import Final, Iterator, Mapping, TYPE_CHECKING
 
-from ._color import Color, DefaultColor
+from ._color import Color
 
 if TYPE_CHECKING:
     from typing import Self
@@ -13,19 +13,19 @@ HEIGHT = 160
 
 
 _COLOR_TO_PAT: Final[Mapping[int, str]] = {
-    DefaultColor.BLACK.value: 'K',
-    DefaultColor.PURPLE.value: 'P',
-    DefaultColor.RED.value: 'R',
-    DefaultColor.ORANGE.value: 'O',
-    DefaultColor.YELLOW.value: 'Y',
+    int(Color.BLACK): 'K',
+    int(Color.PURPLE): 'P',
+    int(Color.RED): 'R',
+    int(Color.ORANGE): 'O',
+    int(Color.YELLOW): 'Y',
     # LIGHT_GREEN
-    DefaultColor.GREEN.value: 'G',
+    int(Color.GREEN): 'G',
     # DARK_GREEN
     # DARK_BLUE
-    DefaultColor.BLUE.value: 'B',
+    int(Color.BLUE): 'B',
     # LIGHT_BLUE
-    DefaultColor.CYAN.value: 'C',
-    DefaultColor.WHITE.value: 'W',
+    int(Color.CYAN): 'C',
+    int(Color.WHITE): 'W',
     # LIGHT_GRAY
     # GRAY
     # DARK_GRAY
@@ -113,14 +113,12 @@ class Frame:
         """
         return (Color(pixel) for pixel in self._buf)
 
-    def __contains__(self, val: DefaultColor | Color | int | str) -> bool:
+    def __contains__(self, val: Color | int | str) -> bool:
         if isinstance(val, int):
             assert 0x000000 <= val <= 0xFFFFFF
             return val in self._buf
         if isinstance(val, Color):
             return val in self
-        if isinstance(val, (str, DefaultColor)):
-            return any(c == val for c in self)
         raise TypeError
 
     def __getitem__(self, i: int | tuple[int, int]) -> Color:
