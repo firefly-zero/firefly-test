@@ -87,9 +87,12 @@ class App:
             self._exited = True
             raise ExitedError
 
-    def get_frame(self) -> Frame:
-        """Get the currently rendered image on the virtual mock screen.
+    @property
+    def frame(self) -> Frame:
+        """Get the image currently rendered on the virtual mock screen.
         """
+        if not self._started:
+            raise RuntimeError('the app is not started, nothing is displayed')
         buf = self._runner.get_frame()
         return Frame(buf, width=240)
 
@@ -103,7 +106,7 @@ class App:
                 self.update()
             except ExitedError:
                 return
-            yield self.get_frame()
+            yield self.frame
 
     def __repr__(self) -> str:
         return f'{type(self).__name__}({repr(self._app_id)})'
