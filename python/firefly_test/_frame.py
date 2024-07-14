@@ -52,9 +52,9 @@ class Frame:
         Can accept either x and y or a flat single number index of the pixel
         in the frame buffer array.
         """
-        if y:
+        if y is not None:
             assert 0 <= x < self.width
-            assert 0 < y < self.height
+            assert 0 <= y < self.height
             x = y * self._width + x
         return Color(self._buf[x])
 

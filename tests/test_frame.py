@@ -124,6 +124,14 @@ def test_eq() -> None:
         BYW
     """
     assert f == """
+        K R G
+        B Y W
+    """
+    assert f == """
+        K.G
+        ..W
+    """
+    assert f == """
         KR
         BY
     """

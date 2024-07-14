@@ -12,7 +12,7 @@ class ExitedError(Exception):
     pass
 
 
-class Firefly:
+class App:
     __slots__ = (
         '_runner',
         '_author_id',
