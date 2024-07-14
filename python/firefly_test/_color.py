@@ -86,7 +86,7 @@ class Color:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, str):
-            if other == ' ':
+            if other == '.':
                 return True
             color = _PAT_TO_COLOR[other]
             return self._raw == color.value
