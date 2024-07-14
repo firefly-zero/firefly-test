@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Iterator
 
 import firefly_test._rust as rust
 from firefly_test._frame import Frame
@@ -13,6 +14,13 @@ class ExitedError(Exception):
 
 
 class App:
+    """A runtime for a single Firefly Zero app.
+
+    Args:
+        id: the full ID of the app. For example, "lux.snek".
+        vfs_path: optional Path to the virtual FS root.
+            If not specified, the global one is detected automatically.
+    """
     __slots__ = (
         '_runner',
         '_author_id',
@@ -31,7 +39,7 @@ class App:
     def __init__(
         self,
         id: str | tuple[str, str],
-        vfs_path: Path,
+        vfs_path: Path | None = None,
     ) -> None:
         if isinstance(id, str):
             left, sep, right = id.partition('.')
@@ -40,16 +48,17 @@ class App:
         self._author_id, self._app_id = id
         assert 0 < len(self._author_id) <= 16
         assert 0 < len(self._app_id) <= 16
-        self._vfs_path = vfs_path
         self._started = False
         self._exited = False
         self._runner = rust.Runner(
             author_id=self._author_id,
             app_id=self._app_id,
-            vfs_path=str(vfs_path.resolve()),
+            vfs_path=str(vfs_path.resolve()) if vfs_path else "",
         )
 
     def start(self) -> None:
+        """Start the app: initialize memory, call `_boot`, etc.
+        """
         if self._exited:
             raise RuntimeError('trying to start exited app')
         if self._started:
@@ -58,6 +67,10 @@ class App:
         self._runner.start()
 
     def update(self) -> None:
+        """Run a single update cycle: call `update`, maybe `render`, render menu, etc.
+        """
+        if not self._started:
+            raise RuntimeError('app must be started before it can be updated')
         if self._exited:
             raise RuntimeError('trying to update exited app')
         exit = self._runner.update()
@@ -66,5 +79,22 @@ class App:
             raise ExitedError
 
     def get_frame(self) -> Frame:
+        """Get the currently rendered image on the virtual mock screen.
+        """
         buf = self._runner.get_frame()
         return Frame(buf, width=240)
+
+    def __iter__(self) -> Iterator[Frame]:
+        """Start the app if needed and on each iteration cycle update it and get Frame.
+        """
+        if not self._started:
+            self.start()
+        while True:
+            try:
+                self.update()
+            except ExitedError:
+                return
+            yield self.get_frame()
+
+    def __repr__(self) -> str:
+        return f'{type(self).__name__}({repr(self._app_id)})'

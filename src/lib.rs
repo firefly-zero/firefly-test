@@ -1,10 +1,12 @@
 mod display;
+use directories::ProjectDirs;
 use display::MockDisplay;
 use embedded_graphics::pixelcolor::Rgb888;
 use firefly_device::*;
 use firefly_runtime::*;
 use pyo3::exceptions::{PyRuntimeError, PyTypeError};
 use pyo3::prelude::*;
+use std::path::PathBuf;
 
 #[pyclass]
 struct Runner {
@@ -15,7 +17,12 @@ struct Runner {
 impl Runner {
     #[new]
     fn new(author_id: String, app_id: String, vfs_path: String) -> PyResult<Self> {
-        let device = DeviceImpl::new(vfs_path.into());
+        let vfs_path: PathBuf = if vfs_path.is_empty() {
+            get_vfs_path()
+        } else {
+            vfs_path.into()
+        };
+        let device = DeviceImpl::new(vfs_path);
         let Ok(author_id) = heapless::String::<16>::try_from(author_id.as_str()) else {
             return Err(PyTypeError::new_err("invalid author_id"));
         };
@@ -56,6 +63,14 @@ impl Runner {
 
     fn get_frame(&self) -> Vec<u32> {
         self.runtime.display().buf.into()
+    }
+}
+
+/// Get path to the virtual file system.
+fn get_vfs_path() -> PathBuf {
+    match ProjectDirs::from("com", "firefly", "firefly") {
+        Some(dirs) => dirs.data_dir().to_owned(),
+        None => PathBuf::from(".firefly"),
     }
 }
 

@@ -10,6 +10,8 @@ crate-type = ["cdylib"]
 [dependencies]
 firefly-device = { path = "../firefly-device" }
 firefly-runtime = { path = "../firefly-runtime" }
+
+directories = "5.0.1"
 embedded-graphics = "0.8.1"
 pyo3 = "0.22.0"
 heapless = "0.8.0"
