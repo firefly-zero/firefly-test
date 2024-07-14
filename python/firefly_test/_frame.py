@@ -3,32 +3,26 @@ from __future__ import annotations
 from collections import Counter
 from typing import Final, Iterator, Mapping, TYPE_CHECKING
 
-from ._color import Color
+from ._color import Color, PAT_TO_COLOR
 
 if TYPE_CHECKING:
-    from typing import Self
+    from typing_extensions import Self
 
 WIDTH = 240
+"""Screen width in pixels.
+
+This is the default width of Frame returned by Firefly.get_frame.
+"""
+
 HEIGHT = 160
+"""Screen height in pixels.
+
+This is the default height of Frame returned by Firefly.get_frame.
+"""
 
 
 _COLOR_TO_PAT: Final[Mapping[int, str]] = {
-    int(Color.BLACK): 'K',
-    int(Color.PURPLE): 'P',
-    int(Color.RED): 'R',
-    int(Color.ORANGE): 'O',
-    int(Color.YELLOW): 'Y',
-    # LIGHT_GREEN
-    int(Color.GREEN): 'G',
-    # DARK_GREEN
-    # DARK_BLUE
-    int(Color.BLUE): 'B',
-    # LIGHT_BLUE
-    int(Color.CYAN): 'C',
-    int(Color.WHITE): 'W',
-    # LIGHT_GRAY
-    # GRAY
-    # DARK_GRAY
+    v: k for k, v in PAT_TO_COLOR.items()
 }
 
 
@@ -144,6 +138,9 @@ class Frame:
             line = ''.join(_COLOR_TO_PAT.get(c, '*') for c in raw_line)
             res += line + '\n'
         return res
+
+    def __len__(self) -> int:
+        return len(self._buf)
 
     def _check_line(self, i: int, pattern: str) -> bool:
         """Check if the given line matches the given pattern.

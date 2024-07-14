@@ -56,21 +56,37 @@ class Color:
 
     @property
     def hls(self) -> tuple[float, float, float]:
+        """Color HLS representation: Hue, Lightness, and Saturation.
+
+        Each value is in the [0.0..1.0] range.
+
+        https://en.wikipedia.org/wiki/HSL_and_HSV
+        """
         return rgb_to_hls(self.r / 255, self.g / 255, self.b / 255)
 
     @property
     def hsv(self) -> tuple[float, float, float]:
+        """Color HSV representation: Hue, Saturation, and Value (Brightness).
+
+        Each value is in the [0.0..1.0] range.
+
+        https://en.wikipedia.org/wiki/HSL_and_HSV
+        """
         return rgb_to_hsv(self.r / 255, self.g / 255, self.b / 255)
 
     @property
     def yiq(self) -> tuple[float, float, float]:
+        """Color YIQ representation.
+
+        https://en.wikipedia.org/wiki/YIQ
+        """
         return rgb_to_yiq(self.r / 255, self.g / 255, self.b / 255)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, str):
             if other == '.':
                 return True
-            color = _PAT_TO_COLOR[other]
+            color = PAT_TO_COLOR[other]
             return self._raw == color
         if isinstance(other, Color):
             return self._raw == other._raw
@@ -116,7 +132,7 @@ Color.TRUE_RED = Color(0xFF0000)
 Color.TRUE_GREEN = Color(0x00FF00)
 Color.TRUE_BLUE = Color(0x0000FF)
 
-_PAT_TO_COLOR: Final[Mapping[str, int]] = {
+PAT_TO_COLOR: Final[Mapping[str, int]] = {
     'K': int(Color.BLACK),
     'P': int(Color.PURPLE),
     'R': int(Color.RED),
