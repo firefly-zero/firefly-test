@@ -100,7 +100,13 @@ class Color:
         return NotImplemented
 
     def __repr__(self) -> str:
-        return f'{type(self).__name__}(0x{self._raw:X})'
+        return f'{type(self).__name__}(0x{self._raw:06X})'
 
     def __str__(self) -> str:
-        return f'#{self._raw:X}'
+        return f'#{self._raw:06X}'
+
+    def __int__(self) -> int:
+        return self._raw
+
+    def __hash__(self) -> int:
+        return hash(self._raw)

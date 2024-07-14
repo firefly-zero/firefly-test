@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 from collections import Counter
-from typing import Final, Iterator, Mapping, Self
+from typing import Final, Iterator, Mapping, TYPE_CHECKING
 
 from ._color import Color, DefaultColor
+
+if TYPE_CHECKING:
+    from typing import Self
 
 WIDTH = 240
 HEIGHT = 160
@@ -36,7 +39,7 @@ class Frame:
 
     def __init__(self, buf: list[int], width: int) -> None:
         self._buf = buf
-        assert 0 <= width < WIDTH
+        assert 0 <= width <= WIDTH
         assert 0 < len(buf) <= WIDTH * HEIGHT
         self._width = width
 
@@ -110,13 +113,13 @@ class Frame:
         """
         return (Color(pixel) for pixel in self._buf)
 
-    def __contains__(self, val: Color | int | str) -> bool:
+    def __contains__(self, val: DefaultColor | Color | int | str) -> bool:
         if isinstance(val, int):
             assert 0x000000 <= val <= 0xFFFFFF
             return val in self._buf
         if isinstance(val, Color):
             return val in self
-        if isinstance(val, str):
+        if isinstance(val, (str, DefaultColor)):
             return any(c == val for c in self)
         raise TypeError
 

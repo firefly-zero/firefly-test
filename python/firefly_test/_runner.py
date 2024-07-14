@@ -65,7 +65,6 @@ class Firefly:
             self._exited = True
             raise ExitedError
 
-    @property
-    def frame(self) -> Frame:
+    def get_frame(self) -> Frame:
         buf = self._runner.get_frame()
         return Frame(buf, width=240)
