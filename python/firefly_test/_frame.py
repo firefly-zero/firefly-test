@@ -138,6 +138,10 @@ class Frame:
                 if not self._check_line(i, pattern):
                     return False
             return True
+        if isinstance(other, type(self)):
+            if self._width != other._width:
+                raise TypeError('can compare only frames of the same width')
+            return self._buf == other._buf
         return NotImplemented
 
     def __str__(self) -> str:

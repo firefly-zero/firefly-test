@@ -109,8 +109,10 @@ def test_eq() -> None:
         int(Color.BLUE), int(Color.YELLOW), int(Color.WHITE),
     ]
     f = Frame(buf, width=3)
+    assert f == f
     assert f == 'K'
     assert f != 'B'
+    assert f == 'KR'
     assert f == 'KRG'
     assert f == '  KRG  '
     assert f != 'KRB'
