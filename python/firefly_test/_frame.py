@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from collections import Counter
-from typing import Final, Iterator, Mapping, TYPE_CHECKING, overload
+from pathlib import Path
+from typing import BinaryIO, Final, Iterator, Mapping, TYPE_CHECKING, overload
 
 from ._color import Color, PAT_TO_COLOR
 
@@ -24,6 +25,10 @@ This is the default height of Frame returned by Firefly.get_frame.
 _COLOR_TO_PAT: Final[Mapping[int, str]] = {
     v: k for k, v in PAT_TO_COLOR.items()
 }
+
+RED = '\033[31m'
+GREEN = '\033[32m'
+END = '\033[0m'
 
 
 class Frame:
@@ -105,6 +110,36 @@ class Frame:
         """
         return Counter(self)
 
+    def assert_match(self, pattern: str | Path | BinaryIO) -> None:
+        """Assert that the frame matches the pattern.
+
+        Raises AssertionError on mismatch. The error message contains a nice diff
+        and some helpful information about the failure.
+        """
+        if isinstance(pattern, str):
+            report = []
+            patterns = [p.strip() for p in pattern.splitlines()]
+            patterns = [p for p in patterns if p]
+            failures = 0
+            for i, pattern in enumerate(patterns):
+                pattern = pattern.strip()
+                if self._check_line(i, pattern):
+                    color = GREEN
+                    sign = '=='
+                else:
+                    color = RED
+                    sign = '!='
+                    failures += 1
+                actual = self._format_line(i)[:len(pattern)]
+                report.append(f'{color}{actual} {sign} {pattern}{END}')
+            if failures:
+                msg = 'Frame does not match the pattern.\n'
+                msg += f'Lines differ: {failures}.\n'
+                msg += 'Diff:\n'
+                msg += '\n'.join(report)
+                raise AssertionError(msg)
+            return
+
     def __iter__(self) -> Iterator[Color]:
         """Iterate over all pixels in the frame.
 
@@ -165,13 +200,15 @@ class Frame:
         """
         res = ''
         for i in range(0, len(self._buf), self._width):
-            raw_line = self._buf[i:i+self._width]
-            line = ''.join(_COLOR_TO_PAT.get(c, '*') for c in raw_line)
-            res += line + '\n'
+            res += self._format_line(i) + '\n'
         return res
 
     def __len__(self) -> int:
         return len(self._buf)
+
+    def _format_line(self, i: int) -> str:
+        raw_line = self._buf[i:i+self._width]
+        return ''.join(_COLOR_TO_PAT.get(c, '*') for c in raw_line)
 
     def _check_line(self, i: int, pattern: str) -> bool:
         """Check if the given line matches the given pattern.
