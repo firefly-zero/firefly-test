@@ -143,6 +143,23 @@ class Frame:
                 raise AssertionError(msg)
             return
 
+        if isinstance(pattern, Path) and not pattern.is_file():
+            self.write(pattern)
+            return
+
+        expected = self.read(pattern)
+        if self.width != expected.width:
+            msg = 'Unexpected Frame.width. '
+            msg += f'Actual: {self.width}. Expected: {expected.width}.'
+            raise AssertionError(msg)
+        if self.height != expected.height:
+            msg = 'Unexpected Frame.height. '
+            msg += f'Actual: {self.height}. Expected: {expected.height}.'
+            raise AssertionError(msg)
+        if self._buf != expected._buf:
+            # TODO: better error
+            raise AssertionError('Unexpected Frame content')
+
     @classmethod
     def read(cls, stream: BinaryIO | Path) -> Self:
         """Read from a file a Frame serialized with Frame.write.
@@ -185,14 +202,14 @@ class Frame:
             self.height,
             8, 2, 0, 0, 0,
         )
-        write_chunk(stream, b"IHDR", header)
+        _write_chunk(stream, b"IHDR", header)
         bs = bytearray()
         for i in range(0, len(self._buf), self._width):
             bs.append(0)
             for pixel in self._buf[i:i+self._width]:
                 bs.extend(pixel.to_bytes(3, 'big'))
-        write_chunk(stream, b"IDAT", zlib.compress(bs))
-        write_chunk(stream, b"IEND", bytearray())
+        _write_chunk(stream, b"IDAT", zlib.compress(bs))
+        _write_chunk(stream, b"IEND", bytearray())
 
     def __iter__(self) -> Iterator[Color]:
         """Iterate over all pixels in the frame.
@@ -278,7 +295,7 @@ class Frame:
         return all(Color(act) == exp for act, exp in zip(line, pattern))
 
 
-def write_chunk(out: BinaryIO, chunk_type: bytes, data: bytes) -> None:
+def _write_chunk(out: BinaryIO, chunk_type: bytes, data: bytes) -> None:
     """Write a PNG chunk.
 
     https://en.wikipedia.org/wiki/PNG
