@@ -146,7 +146,7 @@ class Frame:
             actual = self._format_line(i)[:len(pattern)]
             report.append(f'{color}{actual} {sign} {pattern}{END}')
         if failures:
-            msg = 'Frame does not match the pattern.\n'
+            msg = '🙅 Frame does not match the pattern.\n'
             msg += f'Lines differ: {failures}.\n'
             msg += 'Diff:\n'
             msg += '\n'.join(report)
@@ -158,18 +158,20 @@ class Frame:
         """
         expected = self.read(source)
         if self.width != expected.width:
-            msg = 'Unexpected Frame.width. '
+            msg = '👉 Unexpected Frame.width. '
             msg += f'Actual: {self.width}. Expected: {expected.width}.'
             raise AssertionError(msg)
         if self.height != expected.height:
-            msg = 'Unexpected Frame.height. '
+            msg = '👆 Unexpected Frame.height. '
             msg += f'Actual: {self.height}. Expected: {expected.height}.'
             raise AssertionError(msg)
 
         if self._buf == expected._buf:
             return
 
-        msg = 'Unexpected Frame content.\n'
+        msg = '🖼 Unexpected Frame content.\n'
+        if isinstance(source, Path):
+            msg += f'Snapshot: {source}.\n'
         bad_pixels = sum(a != e for a, e in zip(self._buf, expected._buf))
         msg += f'Pixels mismatch: {bad_pixels} out of {len(self._buf)}.\n'
         bad_lines = 0
