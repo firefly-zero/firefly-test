@@ -114,40 +114,49 @@ class Frame:
         return Counter(self)
 
     def assert_match(self, pattern: str | Path | BinaryIO) -> None:
-        """Assert that the frame matches the pattern.
+        """Assert that the frame matches a pattern or a snapshot.
 
         Raises AssertionError on mismatch. The error message contains a nice diff
         and some helpful information about the failure.
         """
         if isinstance(pattern, str):
-            report = []
-            patterns = [p.strip() for p in pattern.splitlines()]
-            patterns = [p for p in patterns if p]
-            failures = 0
-            for i, pattern in enumerate(patterns):
-                pattern = pattern.strip()
-                if self._check_line(i, pattern):
-                    color = GREEN
-                    sign = '=='
-                else:
-                    color = RED
-                    sign = '!='
-                    failures += 1
-                actual = self._format_line(i)[:len(pattern)]
-                report.append(f'{color}{actual} {sign} {pattern}{END}')
-            if failures:
-                msg = 'Frame does not match the pattern.\n'
-                msg += f'Lines differ: {failures}.\n'
-                msg += 'Diff:\n'
-                msg += '\n'.join(report)
-                raise AssertionError(msg)
+            self._match_pattern(pattern)
             return
-
         if isinstance(pattern, Path) and not pattern.is_file():
             self.write(pattern)
             return
+        self._match_snapshot(pattern)
 
-        expected = self.read(pattern)
+    def _match_pattern(self, pattern: str) -> None:
+        """Raise AssertionError if the Frame doesn't match the given pattern.
+        """
+        report = []
+        patterns = [p.strip() for p in pattern.splitlines()]
+        patterns = [p for p in patterns if p]
+        failures = 0
+        for i, pattern in enumerate(patterns):
+            pattern = pattern.strip()
+            if self._check_line(i, pattern):
+                color = GREEN
+                sign = '=='
+            else:
+                color = RED
+                sign = '!='
+                failures += 1
+            actual = self._format_line(i)[:len(pattern)]
+            report.append(f'{color}{actual} {sign} {pattern}{END}')
+        if failures:
+            msg = 'Frame does not match the pattern.\n'
+            msg += f'Lines differ: {failures}.\n'
+            msg += 'Diff:\n'
+            msg += '\n'.join(report)
+            raise AssertionError(msg)
+        return
+
+    def _match_snapshot(self, source: BinaryIO | Path) -> None:
+        """Raise AssertionError if the Frame doesn't match the given snapshot.
+        """
+        expected = self.read(source)
         if self.width != expected.width:
             msg = 'Unexpected Frame.width. '
             msg += f'Actual: {self.width}. Expected: {expected.width}.'
@@ -156,9 +165,31 @@ class Frame:
             msg = 'Unexpected Frame.height. '
             msg += f'Actual: {self.height}. Expected: {expected.height}.'
             raise AssertionError(msg)
-        if self._buf != expected._buf:
-            # TODO: better error
-            raise AssertionError('Unexpected Frame content')
+
+        if self._buf == expected._buf:
+            return
+
+        msg = 'Unexpected Frame content.\n'
+        bad_pixels = sum(a != e for a, e in zip(self._buf, expected._buf))
+        msg += f'Pixels mismatch: {bad_pixels} out of {len(self._buf)}.\n'
+        bad_lines = 0
+        first_bad = None
+        last_bad = 0
+        width = self._width
+        height = self.height
+        for i in range(0, len(self._buf), width):
+            act_line = self._buf[i:i+width]
+            exp_line = expected._buf[i:i+width]
+            if act_line != exp_line:
+                line_no = i//height
+                last_bad = line_no
+                if first_bad is None:
+                    first_bad = line_no
+                bad_lines += 1
+        msg += f'Lines mismatch: {bad_pixels} out of {self.height}.\n'
+        msg += f'First mismatched line: {first_bad} (0-indexed).\n'
+        msg += f'Last mismatched line: {last_bad} (0-indexed).\n'
+        raise AssertionError(msg)
 
     @classmethod
     def read(cls, stream: BinaryIO | Path) -> Self:
