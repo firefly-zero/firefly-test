@@ -113,6 +113,7 @@ class Frame:
         """
         return Counter(self)
 
+    # TODO: support Frame input.
     def assert_match(self, pattern: str | Path | BinaryIO) -> None:
         """Assert that the frame matches a pattern or a snapshot.
 

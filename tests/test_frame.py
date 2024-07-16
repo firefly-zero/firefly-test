@@ -61,6 +61,29 @@ def test_to_set() -> None:
     assert s == {91, 92, 93, 94, 95}
 
 
+def test_assert_match__snapshot() -> None:
+    f_good = get_frame()
+    f_bad = get_frame()
+    f_bad._buf[3] = 0x66
+    snapshot = BytesIO()
+    f_good.write(snapshot)
+
+    snapshot.seek(0)
+    f_good.assert_match(snapshot)
+
+    snapshot.seek(0)
+    with pytest.raises(AssertionError):
+        f_bad.assert_match(snapshot)
+
+
+def test_assert_match__pattern() -> None:
+    buf = [int(Color.BLACK), int(Color.RED), int(Color.GREEN)]
+    f = Frame(buf, width=3)
+    f.assert_match('K')
+    with pytest.raises(AssertionError):
+        f.assert_match('B')
+
+
 def test_read_write_roundtrip() -> None:
     f1 = get_frame()
     buf = BytesIO()
