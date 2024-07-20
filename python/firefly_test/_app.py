@@ -54,7 +54,7 @@ class App:
         self._runner = rust.Runner(
             author_id=self._author_id,
             app_id=self._app_id,
-            vfs_path=str(vfs_path.resolve()) if vfs_path else "",
+            vfs_path=str(vfs_path.resolve()) if vfs_path else '',
         )
 
     def start(self) -> None:
@@ -109,4 +109,4 @@ class App:
             yield self.frame
 
     def __repr__(self) -> str:
-        return f'{type(self).__name__}({repr(self._app_id)})'
+        return f'{type(self).__name__}({self._app_id!r})'

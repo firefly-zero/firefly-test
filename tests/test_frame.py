@@ -154,10 +154,10 @@ def test_eq() -> None:
         int(Color.BLUE), int(Color.YELLOW), int(Color.WHITE),
     ]
     f = Frame(buf, width=3)
-    assert f == f
+    assert f == f  # noqa: PLR0124
     assert f == 'K'
-    assert not (f != 'K')
-    assert not (f == 'B')
+    assert not (f != 'K')  # noqa: SIM202
+    assert not (f == 'B')  # noqa: SIM201
     assert f != 'B'
     assert f == 'KR'
     assert f == 'KRG'

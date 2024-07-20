@@ -3,16 +3,16 @@ from firefly_test import Color
 
 def test_eq() -> None:
     assert Color.TRUE_BLACK == 0x000000
-    assert 0x000000 == Color.TRUE_BLACK
+    assert 0x000000 == Color.TRUE_BLACK  # noqa: SIM300
     assert Color.TRUE_BLACK != 0x000001
-    assert 0x000001 != Color.TRUE_BLACK
+    assert 0x000001 != Color.TRUE_BLACK  # noqa: SIM300
 
     assert Color.BLACK == 'K'
     assert Color.BLACK != 'B'
     assert Color.BLACK == '.'
 
     assert Color.BLACK == Color.BLACK
-    assert Color.TRUE_BLACK == Color(0x000000)
+    assert Color.TRUE_BLACK == Color(0x000000)  # noqa: SIM300
     assert Color.BLACK != Color.TRUE_BLACK
 
     assert Color.BLACK != []

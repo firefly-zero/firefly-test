@@ -16,11 +16,24 @@ tasks:
   install:
     cmds:
       - task: install-maturin
-      - .venv/bin/maturin develop --extras test
+      - .venv/bin/maturin develop --extras test,lint
+  format:
+    cmds:
+      - task: install
+      - cargo fmt
+      - .venv/bin/ruff check --fix-only .
+  lint:
+    cmds:
+      - task: install
+      - cargo clippy
+      - .venv/bin/ruff check .
   test:
     cmds:
       - task: install
+      - cargo test
       - .venv/bin/pytest
   all:
     cmds:
+      - task: format
+      - task: lint
       - task: test

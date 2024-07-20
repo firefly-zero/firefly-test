@@ -137,24 +137,23 @@ class Frame:
         patterns = [p.strip() for p in pattern.splitlines()]
         patterns = [p for p in patterns if p]
         failures = 0
-        for i, pattern in enumerate(patterns):
-            pattern = pattern.strip()
-            if self._check_line(i, pattern):
+        for i, pattern_line in enumerate(patterns):
+            pattern_line = pattern_line.strip()
+            if self._check_line(i, pattern_line):
                 color = GREEN
                 sign = '=='
             else:
                 color = RED
                 sign = '!='
                 failures += 1
-            actual = self._format_line(i)[:len(pattern)]
-            report.append(f'{color}{actual} {sign} {pattern}{END}')
+            actual = self._format_line(i)[:len(pattern_line)]
+            report.append(f'{color}{actual} {sign} {pattern_line}{END}')
         if failures:
             msg = '🙅 Frame does not match the pattern.\n'
             msg += f'Lines differ: {failures}.\n'
             msg += 'Diff:\n'
             msg += '\n'.join(report)
             raise AssertionError(msg)
-        return
 
     def _match_snapshot(self, source: BinaryIO | Path) -> None:
         """Raise AssertionError if the Frame doesn't match the given snapshot.
@@ -207,8 +206,8 @@ class Frame:
         """Read from a file a Frame serialized with Frame.write.
         """
         if isinstance(stream, Path):
-            with stream.open('rb') as stream:
-                return cls.read(stream)
+            with stream.open('rb') as bin_stream:
+                return cls.read(bin_stream)
         width = int.from_bytes(stream.read(2), _BYTE_ORDER)
         buf = []
         while True:
@@ -222,8 +221,8 @@ class Frame:
         """Serialize the Frame into a file as a binary.
         """
         if isinstance(stream, Path):
-            with stream.open('wb') as stream:
-                self.write(stream)
+            with stream.open('wb') as bin_stream:
+                self.write(bin_stream)
                 return
         stream.write(self._width.to_bytes(2, _BYTE_ORDER))
         for pixel in self._buf:
@@ -233,25 +232,25 @@ class Frame:
         """Save the Frame as a PNG file.
         """
         if isinstance(stream, Path):
-            with stream.open('wb') as stream:
-                self.to_png(stream)
+            with stream.open('wb') as bin_stream:
+                self.to_png(bin_stream)
                 return
         # https://gitlab.com/drj11/minpng/-/blob/main/minpng.py?ref_type=heads
         stream.write(bytearray([137, 80, 78, 71, 13, 10, 26, 10]))
         header = struct.pack(
-            ">2LBBBBB",
+            '>2LBBBBB',
             self.width,
             self.height,
             8, 2, 0, 0, 0,
         )
-        _write_chunk(stream, b"IHDR", header)
+        _write_chunk(stream, b'IHDR', header)
         bs = bytearray()
         for i in range(0, len(self._buf), self._width):
             bs.append(0)
             for pixel in self._buf[i:i+self._width]:
                 bs.extend(pixel.to_bytes(3, 'big'))
-        _write_chunk(stream, b"IDAT", zlib.compress(bs))
-        _write_chunk(stream, b"IEND", bytearray())
+        _write_chunk(stream, b'IDAT', zlib.compress(bs))
+        _write_chunk(stream, b'IEND', bytearray())
 
     def __iter__(self) -> Iterator[Color]:
         """Iterate over all pixels in the frame.
@@ -345,10 +344,10 @@ def _write_chunk(out: BinaryIO, chunk_type: bytes, data: bytes) -> None:
 
     https://en.wikipedia.org/wiki/PNG
     """
-    assert 4 == len(chunk_type)
-    out.write(struct.pack(">L", len(data)))
+    assert len(chunk_type) == 4
+    out.write(struct.pack('>L', len(data)))
     out.write(chunk_type)
     out.write(data)
     checksum = zlib.crc32(chunk_type)
     checksum = zlib.crc32(data, checksum)
-    out.write(struct.pack(">L", checksum))
+    out.write(struct.pack('>L', checksum))
