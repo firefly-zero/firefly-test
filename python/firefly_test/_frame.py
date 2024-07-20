@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from io import BytesIO
 import struct
 import zlib
 from collections import Counter
@@ -209,10 +210,12 @@ class Frame:
         if isinstance(stream, Path):
             with stream.open('rb') as bin_stream:
                 return cls.read(bin_stream)
-        width = int.from_bytes(stream.read(2), _BYTE_ORDER)
+        decomp_bytes = zlib.decompress(stream.read())
+        decomp_stream = BytesIO(decomp_bytes)
+        width = int.from_bytes(decomp_stream.read(2), _BYTE_ORDER)
         buf = []
         while True:
-            chunk = stream.read(4)
+            chunk = decomp_stream.read(4)
             if len(chunk) != 4:
                 break
             buf.append(int.from_bytes(chunk, _BYTE_ORDER))
@@ -225,9 +228,11 @@ class Frame:
             with stream.open('wb') as bin_stream:
                 self.write(bin_stream)
                 return
-        stream.write(self._width.to_bytes(2, _BYTE_ORDER))
+        bs = bytearray()
+        bs.extend(self._width.to_bytes(2, _BYTE_ORDER))
         for pixel in self._buf:
-            stream.write(pixel.to_bytes(4, _BYTE_ORDER))
+            bs.extend(pixel.to_bytes(4, _BYTE_ORDER))
+        stream.write(zlib.compress(bs))
 
     def to_png(self, stream: BinaryIO | Path) -> None:
         """Save the Frame as a PNG file.
