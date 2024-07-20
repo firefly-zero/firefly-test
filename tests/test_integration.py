@@ -41,3 +41,34 @@ def test_buttons() -> None:
     assert app.frame.at(200, 100) == Color.WHITE
     assert app.frame.at(170, 80) == Color.WHITE
     assert app.frame.at(200, 70) == Color.WHITE
+
+
+def test_button_circle() -> None:
+    """If a button is pressed, it is shown on the screen.
+    """
+    app = App('sys.input-test')
+    app.start()
+    app.update()
+    circle = app.frame.get_sub(x=160, y=100, width=20, height=20)
+    circle.assert_match("""
+        WWWW............WWWW
+        WWW....WWWWWW....WWW
+        WW...WWWWWWWWWW...WW
+        W...WWWWWWWWWWWW...W
+        ...WWWWWWWWWWWWWW...
+        ..WWWWWWWWWWWWWWWW..
+        ..WWWWWWWWWWWWWWWW..
+        .WWWWWWWWWWWWWWWWWW.
+        .WWWWWWWWWWWWWWWWWW.
+        .WWWWWWWWWWWWWWWWWW.
+        .WWWWWWWWWWWWWWWWWW.
+        .WWWWWWWWWWWWWWWWWW.
+        .WWWWWWWWWWWWWWWWWW.
+        ..WWWWWWWWWWWWWWWW..
+        ..WWWWWWWWWWWWWWWW..
+        ...WWWWWWWWWWWWWW...
+        W...WWWWWWWWWWWW...W
+        WW...WWWWWWWWWW...WW
+        WWW....WWWWWW....WWW
+        WWWW............WWWW
+    """)

@@ -26,7 +26,7 @@ This is the default height of Frame returned by Firefly.get_frame.
 
 
 _COLOR_TO_PAT: Final[Mapping[int, str]] = {
-    v: k for k, v in PAT_TO_COLOR.items()
+    v: k for k, v in PAT_TO_COLOR.items() if k.isascii()
 }
 _BYTE_ORDER: Final = 'little'
 

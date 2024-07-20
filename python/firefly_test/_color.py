@@ -239,9 +239,21 @@ PAT_TO_COLOR: Final[Mapping[str, int]] = {
     'b': int(Color.LIGHT_BLUE),
     'C': int(Color.CYAN),
     'W': int(Color.WHITE),
-    # LIGHT_GRAY
-    # GRAY
-    # DARK_GRAY
+    '◔': int(Color.LIGHT_GRAY),
+    '◑': int(Color.GRAY),
+    '◕': int(Color.DARK_GRAY),
+
+    # Experimental. Emojis show actual colors but they are also interpreted
+    # by many terminals as 2 characters which makes the diff misaligned.
+    '🖤': int(Color.BLACK),
+    '💜': int(Color.PURPLE),
+    '♥️': int(Color.RED),
+    '🧡': int(Color.ORANGE),
+    '💛': int(Color.YELLOW),
+    '💚': int(Color.GREEN),
+    '💙': int(Color.BLUE),
+    '🤍': int(Color.WHITE),
+    '🩶': int(Color.GRAY),
 }
 
 _COLOR_TO_REPR: Final[Mapping[int, str]] = {

@@ -101,16 +101,18 @@ You can find this test (and the others covered below) in the [tests/test_integra
 
 ...
 
-* `.`: any color
-* `K`: black from SWEETIE-16.
-* `P`: purple from SWEETIE-16.
-* `R`: red from SWEETIE-16.
-* `O`: orange from SWEETIE-16.
-* `Y`: yellow from SWEETIE-16.
-* `G`: green from SWEETIE-16.
-* `B`: blue from SWEETIE-16.
-* `C`: cyan from SWEETIE-16.
-* `W`: white from SWEETIE-16.
+* `.`: any color.
+* `K`: black.
+* `P`: purple.
+* `R`: red.
+* `O`: orange.
+* `Y`: yellow.
+* `G`: green.
+* `g`: light green.
+* `B`: blue.
+* `b`: light blue.
+* `C`: cyan.
+* `W`: white.
 
 ## Snapshot testing
 
