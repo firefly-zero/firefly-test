@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from io import BytesIO
 import struct
 import zlib
 from collections import Counter
+from io import BytesIO
 from pathlib import Path
 from typing import TYPE_CHECKING, BinaryIO, Final, Iterator, Mapping, overload
 
