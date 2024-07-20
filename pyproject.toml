@@ -26,7 +26,7 @@ addopts = [
     "--cov=python/firefly_test",
     "--cov-report=html",
     "--cov-report=xml",
-    "--cov-fail-under=70",
+    "--cov-fail-under=80",
     "--cov-report=term-missing:skip-covered",
 ]
 

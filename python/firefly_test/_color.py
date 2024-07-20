@@ -181,58 +181,15 @@ class Color:
         return NotImplemented
 
     def __repr__(self) -> str:
-        # Partially initialized class, no value is set yet.
-        # Might be reached if there is a failure in Color.__init__
-        # and pytest includes repr in the error report.
         try:
-            self._raw  # noqa: B018
+            return _COLOR_TO_REPR[self._raw]
         except AttributeError:  # pragma: no cover
+            # Partially initialized class, no value is set yet.
+            # Might be reached if there is a failure in Color.__init__
+            # and pytest includes repr in the error report.
             return f'{type(self).__name__}(???)'
-
-        if self._raw == Color.BLACK._raw:
-            return 'Color.BLACK'
-        if self._raw == Color.PURPLE._raw:
-            return 'Color.PURPLE'
-        if self._raw == Color.RED._raw:
-            return 'Color.RED'
-        if self._raw == Color.ORANGE._raw:
-            return 'Color.ORANGE'
-        if self._raw == Color.YELLOW._raw:
-            return 'Color.YELLOW'
-        if self._raw == Color.LIGHT_GREEN._raw:
-            return 'Color.LIGHT_GREEN'
-        if self._raw == Color.GREEN._raw:
-            return 'Color.GREEN'
-        if self._raw == Color.DARK_GREEN._raw:
-            return 'Color.DARK_GREEN'
-        if self._raw == Color.DARK_BLUE._raw:
-            return 'Color.DARK_BLUE'
-        if self._raw == Color.BLUE._raw:
-            return 'Color.BLUE'
-        if self._raw == Color.LIGHT_BLUE._raw:
-            return 'Color.LIGHT_BLUE'
-        if self._raw == Color.CYAN._raw:
-            return 'Color.CYAN'
-        if self._raw == Color.WHITE._raw:
-            return 'Color.WHITE'
-        if self._raw == Color.LIGHT_GRAY._raw:
-            return 'Color.LIGHT_GRAY'
-        if self._raw == Color.GRAY._raw:
-            return 'Color.GRAY'
-        if self._raw == Color.DARK_GRAY._raw:
-            return 'Color.DARK_GRAY'
-        if self._raw == Color.TRUE_BLACK._raw:
-            return 'Color.TRUE_BLACK'
-        if self._raw == Color.TRUE_WHITE._raw:
-            return 'Color.TRUE_WHITE'
-        if self._raw == Color.TRUE_RED._raw:
-            return 'Color.TRUE_RED'
-        if self._raw == Color.TRUE_GREEN._raw:
-            return 'Color.TRUE_GREEN'
-        if self._raw == Color.TRUE_BLUE._raw:
-            return 'Color.TRUE_BLUE'
-
-        return f'{type(self).__name__}(0x{self._raw:06X})'
+        except KeyError:
+            return f'{type(self).__name__}(0x{self._raw:06X})'
 
     def __str__(self) -> str:
         return f'#{self._raw:06X}'
@@ -285,4 +242,28 @@ PAT_TO_COLOR: Final[Mapping[str, int]] = {
     # LIGHT_GRAY
     # GRAY
     # DARK_GRAY
+}
+
+_COLOR_TO_REPR: Final[Mapping[int, str]] = {
+    Color.BLACK._raw: 'Color.BLACK',
+    Color.PURPLE._raw: 'Color.PURPLE',
+    Color.RED._raw: 'Color.RED',
+    Color.ORANGE._raw: 'Color.ORANGE',
+    Color.YELLOW._raw: 'Color.YELLOW',
+    Color.LIGHT_GREEN._raw: 'Color.LIGHT_GREEN',
+    Color.GREEN._raw: 'Color.GREEN',
+    Color.DARK_GREEN._raw: 'Color.DARK_GREEN',
+    Color.DARK_BLUE._raw: 'Color.DARK_BLUE',
+    Color.BLUE._raw: 'Color.BLUE',
+    Color.LIGHT_BLUE._raw: 'Color.LIGHT_BLUE',
+    Color.CYAN._raw: 'Color.CYAN',
+    Color.WHITE._raw: 'Color.WHITE',
+    Color.LIGHT_GRAY._raw: 'Color.LIGHT_GRAY',
+    Color.GRAY._raw: 'Color.GRAY',
+    Color.DARK_GRAY._raw: 'Color.DARK_GRAY',
+    Color.TRUE_BLACK._raw: 'Color.TRUE_BLACK',
+    Color.TRUE_WHITE._raw: 'Color.TRUE_WHITE',
+    Color.TRUE_RED._raw: 'Color.TRUE_RED',
+    Color.TRUE_GREEN._raw: 'Color.TRUE_GREEN',
+    Color.TRUE_BLUE._raw: 'Color.TRUE_BLUE',
 }
