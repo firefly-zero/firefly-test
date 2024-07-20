@@ -25,19 +25,19 @@ def test_rgb() -> None:
     assert c.r == 0xFF
     assert c.g == 0x00
     assert c.b == 0x00
-    assert c.rgb == (0xFF, 0x00, 0x00)
+    assert c.rgb == (1., 0., 0.)
 
     c = Color.TRUE_GREEN
     assert c.r == 0x00
     assert c.g == 0xFF
     assert c.b == 0x00
-    assert c.rgb == (0x00, 0xFF, 0x00)
+    assert c.rgb == (0., 1., 0.)
 
     c = Color.TRUE_BLUE
     assert c.r == 0x00
     assert c.g == 0x00
     assert c.b == 0xFF
-    assert c.rgb == (0x00, 0x00, 0xFF)
+    assert c.rgb == (0., 0., 1.)
 
 
 def test_str() -> None:

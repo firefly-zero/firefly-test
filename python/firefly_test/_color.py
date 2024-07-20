@@ -5,34 +5,97 @@ from typing import ClassVar, Final, Mapping
 
 
 class Color:
+    """An RGB color of a pixel on the Frame.
+    """
     __slots__ = ('_raw',)
     _raw: int
 
     # Colors from the default color palette (SWEETIE 16)
     # https://lospec.com/palette-list/sweetie-16
     BLACK: ClassVar[Color]
+    """The black color from the default palette (SWEETIE-16): #1A1C2C.
+    """
+
     PURPLE: ClassVar[Color]
+    """The purple color from the default palette (SWEETIE-16): #5D275D.
+    """
+
     RED: ClassVar[Color]
+    """The red color from the default palette (SWEETIE-16): #B13E53.
+    """
+
     ORANGE: ClassVar[Color]
+    """The orange color from the default palette (SWEETIE-16): #EF7D57.
+    """
+
     YELLOW: ClassVar[Color]
+    """The yellow color from the default palette (SWEETIE-16): #FFCD75.
+    """
+
     LIGHT_GREEN: ClassVar[Color]
+    """The light green color from the default palette (SWEETIE-16): #A7F070.
+    """
+
     GREEN: ClassVar[Color]
+    """The green color from the default palette (SWEETIE-16): #38B764.
+    """
+
     DARK_GREEN: ClassVar[Color]
+    """The dark green color from the default palette (SWEETIE-16): #257179.
+    """
+
     DARK_BLUE: ClassVar[Color]
+    """The dark blue color from the default palette (SWEETIE-16): #29366F.
+    """
+
     BLUE: ClassVar[Color]
+    """The blue color from the default palette (SWEETIE-16): #3B5DC9.
+    """
+
     LIGHT_BLUE: ClassVar[Color]
+    """The light blue color from the default palette (SWEETIE-16): #41A6F6.
+    """
+
     CYAN: ClassVar[Color]
+    """The cyan color from the default palette (SWEETIE-16): #73EFF7.
+    """
+
     WHITE: ClassVar[Color]
+    """The white color from the default palette (SWEETIE-16): #F4F4F4.
+    """
+
     LIGHT_GRAY: ClassVar[Color]
+    """The light gray color from the default palette (SWEETIE-16): #94B0C2.
+    """
+
     GRAY: ClassVar[Color]
+    """The gray color from the default palette (SWEETIE-16): #566C86.
+    """
+
     DARK_GRAY: ClassVar[Color]
+    """The dark gray color from the default palette (SWEETIE-16): #333C57.
+    """
 
     # The extreme colors useful for debugging.
     TRUE_BLACK: ClassVar[Color]
+    """Purely black color: #000000.
+    """
+
     TRUE_WHITE: ClassVar[Color]
+    """Purely white color: #FFFFFF.
+    """
+
     TRUE_RED: ClassVar[Color]
+    """Purely red color: #FF0000.
+    """
+
     TRUE_GREEN: ClassVar[Color]
+    """Purely green color: #00FF00.
+    """
+
     TRUE_BLUE: ClassVar[Color]
+    """Purely blue color: #0000FF.
+    """
 
     def __init__(self, raw: int) -> None:
         assert 0x000000 <= raw <= 0xFFFFFF
@@ -40,19 +103,37 @@ class Color:
 
     @property
     def r(self) -> int:
+        """The red component of the RGB color representation.
+
+        A value from from 0 (no red) to 255 (as red as it gets).
+        """
         return (self._raw >> 16) & 0xFF
 
     @property
     def g(self) -> int:
+        """The green component of the RGB color representation.
+
+        A value from from 0 (no green) to 255 (as green as it gets).
+        """
         return (self._raw >> 8) & 0xFF
 
     @property
     def b(self) -> int:
+        """The blue component of the RGB color representation.
+
+        A value from from 0 (no blue) to 255 (as blue as it gets).
+        """
         return self._raw & 0xFF
 
     @property
-    def rgb(self) -> tuple[int, int, int]:
-        return (self.r, self.g, self.b)
+    def rgb(self) -> tuple[float, float, float]:
+        """Color RGB representation: Reg, Green, and Blue.
+
+        Each value is in the [0.0..1.0] range.
+
+        https://en.wikipedia.org/wiki/RGB_color_model
+        """
+        return (self.r / 255, self.g / 255, self.b / 255)
 
     @property
     def hls(self) -> tuple[float, float, float]:
