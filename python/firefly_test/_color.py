@@ -231,12 +231,12 @@ PAT_TO_COLOR: Final[Mapping[str, int]] = {
     'R': int(Color.RED),
     'O': int(Color.ORANGE),
     'Y': int(Color.YELLOW),
-    # LIGHT_GREEN
+    'g': int(Color.LIGHT_GREEN),
     'G': int(Color.GREEN),
     # DARK_GREEN
     # DARK_BLUE
     'B': int(Color.BLUE),
-    # LIGHT_BLUE
+    'b': int(Color.LIGHT_BLUE),
     'C': int(Color.CYAN),
     'W': int(Color.WHITE),
     # LIGHT_GRAY

@@ -87,7 +87,7 @@ class Frame:
         assert 0 <= width < self.width
         assert 0 <= height < self.height
         assert 0 <= x + width <= self.width
-        assert 0 <= x + height <= self.height
+        assert 0 <= y + height <= self.height
 
         res_buf = []
         for line_no in range(y, y + height):
@@ -315,14 +315,15 @@ class Frame:
         """Represent the frame as a pattern.
         """
         res = ''
-        for i in range(0, len(self._buf), self._width):
+        for i in range(self._width):
             res += self._format_line(i) + '\n'
         return res
 
     def __len__(self) -> int:
         return len(self._buf)
 
-    def _format_line(self, i: int) -> str:
+    def _format_line(self, line_no: int) -> str:
+        i = line_no * self._width
         raw_line = self._buf[i:i+self._width]
         return ''.join(_COLOR_TO_PAT.get(c, '*') for c in raw_line)
 
