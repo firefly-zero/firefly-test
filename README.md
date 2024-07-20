@@ -122,7 +122,9 @@ You can assert that a subregion of a frame matches a pattern. A pattern is an AS
 Take a frame subregion:
 
 ```python
-circle = app.frame.get_sub(x=160, y=100, width=20, height=20)
+circle = app.frame.get_sub(
+    x=160, y=100, width=20, height=5,
+)
 ```
 
 Assert that it matches a pattern:
@@ -134,25 +136,10 @@ circle.assert_match("""
     WW◑◑◑WWWWWWWWWW◑◑◑WW
     W◑◑◑WWWWWWWWWWWW◑◑◑W
     ◑◑◑WWWWWWWWWWWWWW◑◑◑
-    ◑◑WWWWWWWWWWWWWWWW◑◑
-    ◑◑WWWWWWWWWWWWWWWW◑◑
-    ◑WWWWWWWWWWWWWWWWWW◑
-    ◑WWWWWWWWWWWWWWWWWW◑
-    ◑WWWWWWWWWWWWWWWWWW◑
-    ◑WWWWWWWWWWWWWWWWWW◑
-    ◑WWWWWWWWWWWWWWWWWW◑
-    ◑WWWWWWWWWWWWWWWWWW◑
-    ◑◑WWWWWWWWWWWWWWWW◑◑
-    ◑◑WWWWWWWWWWWWWWWW◑◑
-    ◑◑◑WWWWWWWWWWWWWW◑◑◑
-    W◑◑◑WWWWWWWWWWWW◑◑◑W
-    WW◑◑◑WWWWWWWWWW◑◑◑WW
-    WWW◑◑◑◑WWWWWW◑◑◑◑WWW
-    WWWW◑◑◑◑◑◑◑◑◑◑◑◑WWWW
 """)
 ```
 
-In this example, we checked that the selected region is a gray circle on a white background.
+In this example, we checked that the selected region is a gray circle's top on a white background.
 
 ## Snapshot testing
 
