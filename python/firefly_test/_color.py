@@ -243,16 +243,21 @@ PAT_TO_COLOR: Final[Mapping[str, int]] = {
     '◑': int(Color.GRAY),
     '◕': int(Color.DARK_GRAY),
 
+    # For completeness with gray representations.
+    # Experimental. In dark theme, white looks black and black looks white.
+    '○': int(Color.WHITE),
+    '●': int(Color.BLACK),
+
     # Experimental. Emojis show actual colors but they are also interpreted
     # by many terminals as 2 characters which makes the diff misaligned.
-    '🖤': int(Color.BLACK),
+    '🖤': int(Color.BLACK),     # ◾
     '💜': int(Color.PURPLE),    # 🟪
     '♥️': int(Color.RED),       # 🟥
     '🧡': int(Color.ORANGE),    # 🟧
     '💛': int(Color.YELLOW),    # 🟨
     '💚': int(Color.GREEN),     # 🟩
     '💙': int(Color.BLUE),      # 🟦
-    '🤍': int(Color.WHITE),
+    '🤍': int(Color.WHITE),     # ◽
     '🩶': int(Color.GRAY),
 }
 
