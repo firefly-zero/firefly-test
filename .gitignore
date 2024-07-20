@@ -3,3 +3,6 @@
 /.venv/
 __pycache__/
 *.so
+/.coverage
+/coverage.xml
+/htmlcov/

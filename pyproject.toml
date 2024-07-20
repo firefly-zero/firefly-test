@@ -21,6 +21,26 @@ features = ["pyo3/extension-module"]
 python-source = "python"
 module-name = "firefly_test._rust"
 
+[tool.pytest.ini_options]
+addopts = [
+    "--cov=python/firefly_test",
+    "--cov-report=html",
+    "--cov-report=xml",
+    "--cov-fail-under=70",
+    "--cov-report=term-missing:skip-covered",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING",
+    "    pass",
+    "except ImportError:",
+]
+
+[tool.coverage.run]
+branch = true
+
 [tool.ruff]
 target-version = "py38"
 
