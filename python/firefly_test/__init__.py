@@ -2,9 +2,8 @@
 """
 from ._app import App
 from ._color import Color
-from ._frame import Frame, HEIGHT, WIDTH
+from ._frame import HEIGHT, WIDTH, Frame
 from ._input import Input
-
 
 __all__ = [
     'Color',

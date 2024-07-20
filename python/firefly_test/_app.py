@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Iterator
 
 import firefly_test._rust as rust
+
 from ._frame import Frame
 from ._input import Input
 

@@ -1,4 +1,5 @@
 from io import BytesIO
+
 import pytest
 from firefly_test import Color, Frame
 

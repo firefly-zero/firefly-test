@@ -1,12 +1,12 @@
 from __future__ import annotations
 
+import struct
+import zlib
 from collections import Counter
 from pathlib import Path
-import struct
-from typing import BinaryIO, Final, Iterator, Mapping, TYPE_CHECKING, overload
-import zlib
+from typing import TYPE_CHECKING, BinaryIO, Final, Iterator, Mapping, overload
 
-from ._color import Color, PAT_TO_COLOR
+from ._color import PAT_TO_COLOR, Color
 
 if TYPE_CHECKING:
     from typing_extensions import Self
