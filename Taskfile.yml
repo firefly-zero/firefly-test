@@ -12,8 +12,14 @@ tasks:
       - which .venv/bin/maturin
     cmds:
       - task: create-venv
-      - .venv/bin/pip install maturin
+      - .venv/bin/pip install 'maturin[patchelf]'
   install:
+    sources:
+      - pyproject.toml
+      - Cargo.toml
+      - Cargo.lock
+    status:
+      - test -f .venv/lib/*/site-packages/firefly_test.pth
     cmds:
       - task: install-maturin
       - .venv/bin/maturin develop --extras test,lint

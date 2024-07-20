@@ -12,6 +12,10 @@ class Color:
 
     # Colors from the default color palette (SWEETIE 16)
     # https://lospec.com/palette-list/sweetie-16
+    #
+    # It could be an enum but enums work better when there is a well-known
+    # in advance list of possible values.
+
     BLACK: ClassVar[Color]
     """The black color from the default palette (SWEETIE-16): #1A1C2C.
     """
@@ -177,10 +181,58 @@ class Color:
         return NotImplemented
 
     def __repr__(self) -> str:
+        # Partially initialized class, no value is set yet.
+        # Might be reached if there is a failure in Color.__init__
+        # and pytest includes repr in the error report.
         try:
-            return f'{type(self).__name__}(0x{self._raw:06X})'
-        except AttributeError:
+            self._raw  # noqa: B018
+        except AttributeError:  # pragma: no cover
             return f'{type(self).__name__}(???)'
+
+        if self._raw == Color.BLACK._raw:
+            return 'Color.BLACK'
+        if self._raw == Color.PURPLE._raw:
+            return 'Color.PURPLE'
+        if self._raw == Color.RED._raw:
+            return 'Color.RED'
+        if self._raw == Color.ORANGE._raw:
+            return 'Color.ORANGE'
+        if self._raw == Color.YELLOW._raw:
+            return 'Color.YELLOW'
+        if self._raw == Color.LIGHT_GREEN._raw:
+            return 'Color.LIGHT_GREEN'
+        if self._raw == Color.GREEN._raw:
+            return 'Color.GREEN'
+        if self._raw == Color.DARK_GREEN._raw:
+            return 'Color.DARK_GREEN'
+        if self._raw == Color.DARK_BLUE._raw:
+            return 'Color.DARK_BLUE'
+        if self._raw == Color.BLUE._raw:
+            return 'Color.BLUE'
+        if self._raw == Color.LIGHT_BLUE._raw:
+            return 'Color.LIGHT_BLUE'
+        if self._raw == Color.CYAN._raw:
+            return 'Color.CYAN'
+        if self._raw == Color.WHITE._raw:
+            return 'Color.WHITE'
+        if self._raw == Color.LIGHT_GRAY._raw:
+            return 'Color.LIGHT_GRAY'
+        if self._raw == Color.GRAY._raw:
+            return 'Color.GRAY'
+        if self._raw == Color.DARK_GRAY._raw:
+            return 'Color.DARK_GRAY'
+        if self._raw == Color.TRUE_BLACK._raw:
+            return 'Color.TRUE_BLACK'
+        if self._raw == Color.TRUE_WHITE._raw:
+            return 'Color.TRUE_WHITE'
+        if self._raw == Color.TRUE_RED._raw:
+            return 'Color.TRUE_RED'
+        if self._raw == Color.TRUE_GREEN._raw:
+            return 'Color.TRUE_GREEN'
+        if self._raw == Color.TRUE_BLUE._raw:
+            return 'Color.TRUE_BLUE'
+
+        return f'{type(self).__name__}(0x{self._raw:06X})'
 
     def __str__(self) -> str:
         return f'#{self._raw:06X}'

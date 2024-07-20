@@ -48,7 +48,27 @@ def test_str() -> None:
 
 
 def test_repr() -> None:
-    assert repr(Color.TRUE_RED) == 'Color(0xFF0000)'
-    assert repr(Color.TRUE_GREEN) == 'Color(0x00FF00)'
-    assert repr(Color.TRUE_BLUE) == 'Color(0x0000FF)'
-    assert repr(Color.TRUE_BLACK) == 'Color(0x000000)'
+    assert repr(Color(0x1289CD)) == 'Color(0x1289CD)'
+
+    assert repr(Color.TRUE_RED) == 'Color.TRUE_RED'
+    assert repr(Color.TRUE_GREEN) == 'Color.TRUE_GREEN'
+    assert repr(Color.TRUE_BLUE) == 'Color.TRUE_BLUE'
+    assert repr(Color.TRUE_BLACK) == 'Color.TRUE_BLACK'
+    assert repr(Color.TRUE_WHITE) == 'Color.TRUE_WHITE'
+
+    assert repr(Color.BLACK) == 'Color.BLACK'
+    assert repr(Color.PURPLE) == 'Color.PURPLE'
+    assert repr(Color.RED) == 'Color.RED'
+    assert repr(Color.ORANGE) == 'Color.ORANGE'
+    assert repr(Color.YELLOW) == 'Color.YELLOW'
+    assert repr(Color.LIGHT_GREEN) == 'Color.LIGHT_GREEN'
+    assert repr(Color.GREEN) == 'Color.GREEN'
+    assert repr(Color.DARK_GREEN) == 'Color.DARK_GREEN'
+    assert repr(Color.DARK_BLUE) == 'Color.DARK_BLUE'
+    assert repr(Color.BLUE) == 'Color.BLUE'
+    assert repr(Color.LIGHT_BLUE) == 'Color.LIGHT_BLUE'
+    assert repr(Color.CYAN) == 'Color.CYAN'
+    assert repr(Color.WHITE) == 'Color.WHITE'
+    assert repr(Color.LIGHT_GRAY) == 'Color.LIGHT_GRAY'
+    assert repr(Color.GRAY) == 'Color.GRAY'
+    assert repr(Color.DARK_GRAY) == 'Color.DARK_GRAY'
