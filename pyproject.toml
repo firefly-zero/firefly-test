@@ -55,6 +55,9 @@ inline-quotes = "single"
 [tool.ruff.lint.pylint]
 max-args = 10
 
+[tool.ruff.lint.isort]
+lines-after-imports = 2
+
 [tool.mypy]
 files = ["."]
 python_version = "3.8"

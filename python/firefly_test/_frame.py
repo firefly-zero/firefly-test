@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, BinaryIO, Final, Iterator, Mapping, overload
 
 from ._color import PAT_TO_COLOR, Color
 
+
 if TYPE_CHECKING:
     from typing_extensions import Self
 
