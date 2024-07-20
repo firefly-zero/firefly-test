@@ -53,3 +53,9 @@ inline-quotes = "single"
 
 [tool.ruff.lint.pylint]
 max-args = 10
+
+[tool.mypy]
+files = ["."]
+python_version = "3.8"
+ignore_missing_imports = true
+strict = true

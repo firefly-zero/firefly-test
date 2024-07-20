@@ -27,6 +27,7 @@ tasks:
       - task: install
       - cargo clippy
       - .venv/bin/ruff check .
+      - .venv/bin/mypy
   test:
     cmds:
       - task: install
