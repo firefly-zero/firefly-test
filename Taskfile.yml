@@ -1,0 +1,26 @@
+# https://taskfile.dev
+version: "3"
+
+tasks:
+  create-venv:
+    status:
+      - test -f .venv/bin/pip
+    cmds:
+      - python3 -m venv .venv
+  install-maturin:
+    status:
+      - which .venv/bin/maturin
+    cmds:
+      - task: create-venv
+      - .venv/bin/pip install maturin
+  install:
+    cmds:
+      - task: install-maturin
+      - .venv/bin/maturin develop --extras test
+  test:
+    cmds:
+      - task: install
+      - .venv/bin/pytest
+  all:
+    cmds:
+      - task: test
