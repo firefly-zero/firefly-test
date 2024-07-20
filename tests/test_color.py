@@ -40,6 +40,16 @@ def test_rgb() -> None:
     assert c.rgb == (0., 0., 1.)
 
 
+def test_colorsys() -> None:
+    c = Color.TRUE_WHITE
+    assert c.hls == (0, 1, 0)
+    assert c.hsv == (0, 0, 1)
+
+    assert 0.9999 < c.yiq[0] < 1.0
+    assert 0 < c.yiq[1] < 0.00001
+    assert 0 < c.yiq[2] < 0.00001
+
+
 def test_str() -> None:
     assert str(Color.TRUE_RED) == '#FF0000'
     assert str(Color.TRUE_GREEN) == '#00FF00'

@@ -3,6 +3,15 @@
 from firefly_test import App, Color, Input
 
 
+def test_colors() -> None:
+    app = App('sys.input-test')
+    app.start()
+    app.update()
+    allowed_colors = (Color.WHITE, Color.LIGHT_GRAY, Color.GRAY)
+    for color in app.frame:
+        assert color in allowed_colors
+
+
 def test_buttons() -> None:
     """If a button is pressed, it is shown on the screen.
     """
