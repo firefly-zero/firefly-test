@@ -113,20 +113,22 @@ class Frame:
         """
         return Counter(self)
 
-    # TODO: support Frame input.
-    def assert_match(self, pattern: str | Path | BinaryIO) -> None:
-        """Assert that the frame matches a pattern or a snapshot.
+    def assert_match(self, expected: str | Path | BinaryIO | Frame) -> None:
+        """Assert that the frame matches a pattern, a Frame, or a snapshot.
 
         Raises AssertionError on mismatch. The error message contains a nice diff
         and some helpful information about the failure.
         """
-        if isinstance(pattern, str):
-            self._match_pattern(pattern)
+        if isinstance(expected, str):
+            self._match_pattern(expected)
             return
-        if isinstance(pattern, Path) and not pattern.is_file():
-            self.write(pattern)
+        if isinstance(expected, Frame):
+            self._match_frame(expected)
             return
-        self._match_snapshot(pattern)
+        if isinstance(expected, Path) and not expected.is_file():
+            self.write(expected)
+            return
+        self._match_snapshot(expected)
 
     def _match_pattern(self, pattern: str) -> None:
         """Raise AssertionError if the Frame doesn't match the given pattern.
@@ -158,6 +160,12 @@ class Frame:
         """Raise AssertionError if the Frame doesn't match the given snapshot.
         """
         expected = self.read(source)
+        path = source if isinstance(source, Path) else None
+        self._match_frame(expected, path)
+
+    def _match_frame(self, expected: Self, path: Path | None = None) -> None:
+        """Raise AssertionError if the Frame doesn't match the given Frame.
+        """
         if self.width != expected.width:
             msg = '👉 Unexpected Frame.width. '
             msg += f'Actual: {self.width}. Expected: {expected.width}.'
@@ -171,8 +179,8 @@ class Frame:
             return
 
         msg = '🖼 Unexpected Frame content.\n'
-        if isinstance(source, Path):
-            msg += f'Snapshot: {source}.\n'
+        if path is not None:
+            msg += f'Snapshot: {path}.\n'
         bad_pixels = sum(a != e for a, e in zip(self._buf, expected._buf))
         msg += f'Pixels mismatch: {bad_pixels} out of {len(self._buf)}.\n'
         bad_lines = 0
