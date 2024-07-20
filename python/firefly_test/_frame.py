@@ -294,6 +294,9 @@ class Frame:
             return self.get_sub(x=x, y=y, width=ex - x, height=ey - y)
         return Color(self._buf[i])
 
+    def __ne__(self, other: object) -> bool:
+        return not self.__eq__(other)
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, str):
             patterns = [p.strip() for p in other.splitlines()]

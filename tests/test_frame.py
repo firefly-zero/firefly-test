@@ -156,6 +156,8 @@ def test_eq() -> None:
     f = Frame(buf, width=3)
     assert f == f
     assert f == 'K'
+    assert not (f != 'K')
+    assert not (f == 'B')
     assert f != 'B'
     assert f == 'KR'
     assert f == 'KRG'
