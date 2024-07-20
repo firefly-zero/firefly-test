@@ -51,24 +51,24 @@ def test_button_circle() -> None:
     app.update()
     circle = app.frame.get_sub(x=160, y=100, width=20, height=20)
     circle.assert_match("""
-        WWWW............WWWW
-        WWW....WWWWWW....WWW
-        WW...WWWWWWWWWW...WW
-        W...WWWWWWWWWWWW...W
-        ...WWWWWWWWWWWWWW...
-        ..WWWWWWWWWWWWWWWW..
-        ..WWWWWWWWWWWWWWWW..
-        .WWWWWWWWWWWWWWWWWW.
-        .WWWWWWWWWWWWWWWWWW.
-        .WWWWWWWWWWWWWWWWWW.
-        .WWWWWWWWWWWWWWWWWW.
-        .WWWWWWWWWWWWWWWWWW.
-        .WWWWWWWWWWWWWWWWWW.
-        ..WWWWWWWWWWWWWWWW..
-        ..WWWWWWWWWWWWWWWW..
-        ...WWWWWWWWWWWWWW...
-        W...WWWWWWWWWWWW...W
-        WW...WWWWWWWWWW...WW
-        WWW....WWWWWW....WWW
-        WWWW............WWWW
+        WWWW◑◑◑◑◑◑◑◑◑◑◑◑WWWW
+        WWW◑◑◑◑WWWWWW◑◑◑◑WWW
+        WW◑◑◑WWWWWWWWWW◑◑◑WW
+        W◑◑◑WWWWWWWWWWWW◑◑◑W
+        ◑◑◑WWWWWWWWWWWWWW◑◑◑
+        ◑◑WWWWWWWWWWWWWWWW◑◑
+        ◑◑WWWWWWWWWWWWWWWW◑◑
+        ◑WWWWWWWWWWWWWWWWWW◑
+        ◑WWWWWWWWWWWWWWWWWW◑
+        ◑WWWWWWWWWWWWWWWWWW◑
+        ◑WWWWWWWWWWWWWWWWWW◑
+        ◑WWWWWWWWWWWWWWWWWW◑
+        ◑WWWWWWWWWWWWWWWWWW◑
+        ◑◑WWWWWWWWWWWWWWWW◑◑
+        ◑◑WWWWWWWWWWWWWWWW◑◑
+        ◑◑◑WWWWWWWWWWWWWW◑◑◑
+        W◑◑◑WWWWWWWWWWWW◑◑◑W
+        WW◑◑◑WWWWWWWWWW◑◑◑WW
+        WWW◑◑◑◑WWWWWW◑◑◑◑WWW
+        WWWW◑◑◑◑◑◑◑◑◑◑◑◑WWWW
     """)

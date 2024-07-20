@@ -109,10 +109,15 @@ You can find this test (and the others covered below) in the [tests/test_integra
 * `Y`: yellow.
 * `G`: green.
 * `g`: light green.
+* `D`: dark green.
 * `B`: blue.
+* `d`: dark blue.
 * `b`: light blue.
 * `C`: cyan.
 * `W`: white.
+* `◔`: light gray.
+* `◑`: gray.
+* `◕`: dark gray.
 
 ## Snapshot testing
 
