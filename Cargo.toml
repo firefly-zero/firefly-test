@@ -8,8 +8,8 @@ name = "firefly_test"
 crate-type = ["cdylib"]
 
 [dependencies]
-firefly-device = { path = "../firefly-device" }
-firefly-runtime = { path = "../firefly-runtime" }
+firefly-device = { path = "../firefly/firefly-device" }
+firefly-runtime = { path = "../firefly/firefly-runtime" }
 
 directories = "5.0.1"
 embedded-graphics = "0.8.1"
