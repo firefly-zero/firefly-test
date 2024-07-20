@@ -1,6 +1,9 @@
 """The module contains tests for sys.input-test.
 """
+from pathlib import Path
+
 from firefly_test import App, Color, Input
+from firefly_test._input import Pad
 
 
 def test_colors() -> None:
@@ -72,3 +75,17 @@ def test_button_circle() -> None:
         WWW◑◑◑◑WWWWWW◑◑◑◑WWW
         WWWW◑◑◑◑◑◑◑◑◑◑◑◑WWWW
     """)
+
+
+def test_snapshots() -> None:
+    """If a button is pressed, it is shown on the screen.
+    """
+    app = App('sys.input-test')
+    snapshots = Path(__file__).parent / '.snapshots'
+    app.start()
+
+    app.update()
+    app.frame.assert_match(snapshots / 'default')
+
+    app.update(Input(Pad(30, 40), a=True, b=True, x=True, y=True))
+    app.frame.assert_match(snapshots / 'all_pressed')

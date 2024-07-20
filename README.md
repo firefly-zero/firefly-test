@@ -156,7 +156,16 @@ In this example, we checked that the selected region is a gray circle on a white
 
 ## Snapshot testing
 
-...
+You can compare a frame or frame region to a snapshot:
+
+```python
+from pathlib import Path
+snapshots = Path(__file__).parent / '.snapshots'
+app.update()
+app.frame.assert_match(snapshots / 'default')
+```
+
+On the first run, the test will save the frame in the `.snapshots/default` file. When you run it the next time, it will read the old frame from the file and compare it to the current one. If they mismatch, even by one pixel, the test will fail. You can use `to_png` method of the frame to save it into a PNG file and see how it looks like. If the change is desirable, you can remove the old snapshot and the next run will save the new snapshot.
 
 ## License
 

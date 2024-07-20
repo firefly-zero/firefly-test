@@ -127,6 +127,7 @@ class Frame:
             self._match_frame(expected)
             return
         if isinstance(expected, Path) and not expected.is_file():
+            expected.parent.mkdir(exist_ok=True)
             self.write(expected)
             return
         self._match_snapshot(expected)
@@ -187,17 +188,16 @@ class Frame:
         first_bad = None
         last_bad = 0
         width = self._width
-        height = self.height
         for i in range(0, len(self._buf), width):
             act_line = self._buf[i:i+width]
             exp_line = expected._buf[i:i+width]
             if act_line != exp_line:
-                line_no = i//height
+                line_no = i // width
                 last_bad = line_no
                 if first_bad is None:
                     first_bad = line_no
                 bad_lines += 1
-        msg += f'Lines mismatch: {bad_pixels} out of {self.height}.\n'
+        msg += f'Lines mismatch: {bad_lines} out of {self.height}.\n'
         msg += f'First mismatched line: {first_bad} (0-indexed).\n'
         msg += f'Last mismatched line: {last_bad} (0-indexed).\n'
         raise AssertionError(msg)
