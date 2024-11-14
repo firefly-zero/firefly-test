@@ -10,7 +10,7 @@ def test_colors() -> None:
     app = App('sys.input-test')
     app.start()
     app.update()
-    allowed_colors = (Color.WHITE, Color.LIGHT_GRAY, Color.GRAY)
+    allowed_colors = (Color.WHITE, Color.DARK_BLUE, Color.GRAY)
     for color in app.frame:
         assert color in allowed_colors
 
@@ -25,19 +25,19 @@ def test_buttons() -> None:
 
     assert app.frame.at(170, 110) == Color.WHITE
     app.update(Input(a=True))
-    assert app.frame.at(170, 110) == Color.LIGHT_BLUE
+    assert app.frame.at(170, 110) == Color.DARK_BLUE
 
     assert app.frame.at(200, 100) == Color.WHITE
     app.update(Input(b=True))
-    assert app.frame.at(200, 100) == Color.LIGHT_BLUE
+    assert app.frame.at(200, 100) == Color.DARK_BLUE
 
     assert app.frame.at(170, 80) == Color.WHITE
     app.update(Input(x=True))
-    assert app.frame.at(170, 80) == Color.LIGHT_BLUE
+    assert app.frame.at(170, 80) == Color.DARK_BLUE
 
     assert app.frame.at(200, 70) == Color.WHITE
     app.update(Input(y=True))
-    assert app.frame.at(200, 70) == Color.LIGHT_BLUE
+    assert app.frame.at(200, 70) == Color.DARK_BLUE
 
     app.update(Input())
     assert app.frame.at(170, 110) == Color.WHITE
@@ -54,26 +54,26 @@ def test_button_circle() -> None:
     app.update()
     circle = app.frame.get_sub(x=160, y=100, width=20, height=20)
     circle.assert_match("""
-        WWWW◑◑◑◑◑◑◑◑◑◑◑◑WWWW
-        WWW◑◑◑◑WWWWWW◑◑◑◑WWW
-        WW◑◑◑WWWWWWWWWW◑◑◑WW
-        W◑◑◑WWWWWWWWWWWW◑◑◑W
-        ◑◑◑WWWWWWWWWWWWWW◑◑◑
-        ◑◑WWWWWWWWWWWWWWWW◑◑
-        ◑◑WWWWWWWWWWWWWWWW◑◑
-        ◑WWWWWWWWWWWWWWWWWW◑
-        ◑WWWWWWWWWWWWWWWWWW◑
-        ◑WWWWWWWWWWWWWWWWWW◑
-        ◑WWWWWWWWWWWWWWWWWW◑
-        ◑WWWWWWWWWWWWWWWWWW◑
-        ◑WWWWWWWWWWWWWWWWWW◑
-        ◑◑WWWWWWWWWWWWWWWW◑◑
-        ◑◑WWWWWWWWWWWWWWWW◑◑
-        ◑◑◑WWWWWWWWWWWWWW◑◑◑
-        W◑◑◑WWWWWWWWWWWW◑◑◑W
-        WW◑◑◑WWWWWWWWWW◑◑◑WW
-        WWW◑◑◑◑WWWWWW◑◑◑◑WWW
-        WWWW◑◑◑◑◑◑◑◑◑◑◑◑WWWW
+        WWWWddddddddddddWWWW
+        WWWddddWWWWWWddddWWW
+        WWdddWWWWWWWWWWdddWW
+        WdddWWWWWWWWWWWWdddW
+        dddWWWWWWWWWWWWWWddd
+        ddWWWWWWWWWWWWWWWWdd
+        ddWWWWWWWWWWWWWWWWdd
+        dWWWWWWWWWWWWWWWWWWd
+        dWWWWWWWWWWWWWWWWWWd
+        dWWWWWWWWWWWWWWWWWWd
+        dWWWWWWWWWWWWWWWWWWd
+        dWWWWWWWWWWWWWWWWWWd
+        dWWWWWWWWWWWWWWWWWWd
+        ddWWWWWWWWWWWWWWWWdd
+        ddWWWWWWWWWWWWWWWWdd
+        dddWWWWWWWWWWWWWWddd
+        WdddWWWWWWWWWWWWdddW
+        WWdddWWWWWWWWWWdddWW
+        WWWddddWWWWWWddddWWW
+        WWWWddddddddddddWWWW
     """)
 
 

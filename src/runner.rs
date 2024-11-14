@@ -7,7 +7,7 @@ use pyo3::exceptions::{PyRuntimeError, PyTypeError};
 use pyo3::prelude::*;
 use std::path::PathBuf;
 
-#[pyclass]
+#[pyclass(unsendable)]
 pub struct Runner {
     runtime: Box<Runtime<MockDisplay, Rgb888>>,
 }
