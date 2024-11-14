@@ -21,7 +21,11 @@ impl Runner {
         } else {
             vfs_path.into()
         };
-        let device = DeviceImpl::new(vfs_path);
+        let config = DeviceConfig {
+            root: vfs_path,
+            ..Default::default()
+        };
+        let device = DeviceImpl::new(config);
         let Ok(author_id) = heapless::String::<16>::try_from(author_id.as_str()) else {
             return Err(PyTypeError::new_err("invalid author_id"));
         };
@@ -60,7 +64,7 @@ impl Runner {
         }
     }
 
-    fn get_frame(&self) -> Vec<u32> {
+    fn get_frame(&mut self) -> Vec<u32> {
         self.runtime.display().buf.into()
     }
 

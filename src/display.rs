@@ -7,7 +7,7 @@ use std::convert::Infallible;
 const BUF_SIZE: usize = WIDTH * HEIGHT;
 
 pub(crate) struct MockDisplay {
-    /// THe frame buffer for the display. One value is a serialized RGB value.
+    /// The frame buffer for the display. One value is a serialized RGB value.
     pub buf: [u32; BUF_SIZE],
 }
 
