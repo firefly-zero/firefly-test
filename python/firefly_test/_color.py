@@ -259,39 +259,39 @@ Color.TRUE_GREEN = Color.from_rgb24(0x00FF00)
 Color.TRUE_BLUE = Color.from_rgb24(0x0000FF)
 
 PAT_TO_COLOR: Final[Mapping[str, int]] = {
-    'K': int(Color.BLACK),
-    'P': int(Color.PURPLE),
-    'R': int(Color.RED),
-    'O': int(Color.ORANGE),
-    'Y': int(Color.YELLOW),
-    'g': int(Color.LIGHT_GREEN),
-    'G': int(Color.GREEN),
-    'D': int(Color.DARK_GREEN),
-    'd': int(Color.DARK_BLUE),
-    'B': int(Color.BLUE),
-    'b': int(Color.LIGHT_BLUE),
-    'C': int(Color.CYAN),
-    'W': int(Color.WHITE),
-    '◔': int(Color.LIGHT_GRAY),
-    '◑': int(Color.GRAY),
-    '◕': int(Color.DARK_GRAY),
+    'K': Color.BLACK._rgb16,
+    'P': Color.PURPLE._rgb16,
+    'R': Color.RED._rgb16,
+    'O': Color.ORANGE._rgb16,
+    'Y': Color.YELLOW._rgb16,
+    'g': Color.LIGHT_GREEN._rgb16,
+    'G': Color.GREEN._rgb16,
+    'D': Color.DARK_GREEN._rgb16,
+    'd': Color.DARK_BLUE._rgb16,
+    'B': Color.BLUE._rgb16,
+    'b': Color.LIGHT_BLUE._rgb16,
+    'C': Color.CYAN._rgb16,
+    'W': Color.WHITE._rgb16,
+    '◔': Color.LIGHT_GRAY._rgb16,
+    '◑': Color.GRAY._rgb16,
+    '◕': Color.DARK_GRAY._rgb16,
 
     # For completeness with gray representations.
     # Experimental. In dark theme, white looks black and black looks white.
-    '○': int(Color.WHITE),
-    '●': int(Color.BLACK),
+    '○': Color.WHITE._rgb16,
+    '●': Color.BLACK._rgb16,
 
     # Experimental. Emojis show actual colors but they are also interpreted
     # by many terminals as 2 characters which makes the diff misaligned.
-    '🖤': int(Color.BLACK),     # ◾
-    '💜': int(Color.PURPLE),    # 🟪
-    '♥️': int(Color.RED),       # 🟥
-    '🧡': int(Color.ORANGE),    # 🟧
-    '💛': int(Color.YELLOW),    # 🟨
-    '💚': int(Color.GREEN),     # 🟩
-    '💙': int(Color.BLUE),      # 🟦
-    '🤍': int(Color.WHITE),     # ◽
-    '🩶': int(Color.GRAY),
+    '🖤': Color.BLACK._rgb16,     # ◾
+    '💜': Color.PURPLE._rgb16,    # 🟪
+    '♥️': Color.RED._rgb16,       # 🟥
+    '🧡': Color.ORANGE._rgb16,    # 🟧
+    '💛': Color.YELLOW._rgb16,    # 🟨
+    '💚': Color.GREEN._rgb16,     # 🟩
+    '💙': Color.BLUE._rgb16,      # 🟦
+    '🤍': Color.WHITE._rgb16,     # ◽
+    '🩶': Color.GRAY._rgb16,
 }
 
 _COLOR_TO_REPR: Final[Mapping[int, str]] = {
