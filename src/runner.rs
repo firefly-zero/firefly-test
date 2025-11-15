@@ -63,7 +63,7 @@ impl Runner {
         }
     }
 
-    fn get_frame(&mut self) -> Vec<u32> {
+    fn get_frame(&mut self) -> Vec<u16> {
         let runtime = get_runtime();
         runtime.display_mut().buf.into()
     }

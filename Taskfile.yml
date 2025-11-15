@@ -38,7 +38,7 @@ tasks:
     cmds:
       - task: install
       - cargo test
-      - .venv/bin/pytest
+      - .venv/bin/pytest {{.CLI_ARGS}}
   all:
     cmds:
       - task: format

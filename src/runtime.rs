@@ -1,10 +1,9 @@
 use crate::display::MockDisplay;
 use core::mem::MaybeUninit;
-use embedded_graphics::pixelcolor::Rgb888;
-use firefly_runtime::Runtime;
+use firefly_runtime::{Rgb16, Runtime};
 use std::sync::Mutex;
 
-type RealRuntime<'a> = Runtime<'a, MockDisplay, Rgb888>;
+type RealRuntime<'a> = Runtime<'a, MockDisplay, Rgb16>;
 
 /// A global Runtime instance.
 ///

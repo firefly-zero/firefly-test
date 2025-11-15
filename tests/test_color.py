@@ -4,15 +4,15 @@ from firefly_test import Color
 def test_eq() -> None:
     assert Color.TRUE_BLACK == 0x000000
     assert 0x000000 == Color.TRUE_BLACK  # noqa: SIM300
-    assert Color.TRUE_BLACK != 0x000001
-    assert 0x000001 != Color.TRUE_BLACK  # noqa: SIM300
+    assert Color.TRUE_BLACK != 0x000010
+    assert 0x000010 != Color.TRUE_BLACK  # noqa: SIM300
 
     assert Color.BLACK == 'K'
     assert Color.BLACK != 'B'
     assert Color.BLACK == '.'
 
     assert Color.BLACK == Color.BLACK
-    assert Color.TRUE_BLACK == Color(0x000000)  # noqa: SIM300
+    assert Color.TRUE_BLACK == Color.from_rgb24(0x000000)  # noqa: SIM300
     assert Color.BLACK != Color.TRUE_BLACK
 
     assert Color.BLACK != []
@@ -22,14 +22,16 @@ def test_eq() -> None:
 
 def test_rgb() -> None:
     c = Color.TRUE_RED
-    assert c.r == 0xFF
+    assert 248 <= c.r <= 255
     assert c.g == 0x00
     assert c.b == 0x00
-    assert c.rgb == (1., 0., 0.)
+    assert 0.97 <= c.rgb[0] <= 1.00
+    assert c.rgb[1] == 0
+    assert c.rgb[2] == 0
 
     c = Color.TRUE_GREEN
     assert c.r == 0x00
-    assert c.g == 0xFF
+    assert 252 <= c.g <= 255
     assert c.b == 0x00
     assert c.rgb == (0., 1., 0.)
 
@@ -58,7 +60,7 @@ def test_str() -> None:
 
 
 def test_repr() -> None:
-    assert repr(Color(0x1289CD)) == 'Color(0x1289CD)'
+    assert repr(Color.from_rgb24(0x1289CD)) == 'Color(0x1289CD)'
 
     assert repr(Color.TRUE_RED) == 'Color.TRUE_RED'
     assert repr(Color.TRUE_GREEN) == 'Color.TRUE_GREEN'

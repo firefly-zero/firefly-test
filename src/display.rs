@@ -1,4 +1,3 @@
-use embedded_graphics::pixelcolor::Rgb888;
 use embedded_graphics::prelude::*;
 use embedded_graphics::primitives::Rectangle;
 use embedded_graphics::Pixel;
@@ -9,7 +8,7 @@ const BUF_SIZE: usize = WIDTH * HEIGHT;
 
 pub(crate) struct MockDisplay {
     /// The frame buffer for the display. One value is a serialized RGB value.
-    pub buf: [u32; BUF_SIZE],
+    pub buf: [u16; BUF_SIZE],
 }
 
 impl MockDisplay {
@@ -25,7 +24,7 @@ impl OriginDimensions for MockDisplay {
 }
 
 impl DrawTarget for MockDisplay {
-    type Color = Rgb888;
+    type Color = Rgb16;
     type Error = Infallible;
 
     fn draw_iter<I>(&mut self, pixels: I) -> Result<(), Self::Error>
@@ -34,8 +33,7 @@ impl DrawTarget for MockDisplay {
     {
         for Pixel(point, color) in pixels {
             let i = point.y as usize * WIDTH + point.x as usize;
-            let v = color.into_storage();
-            self.buf[i] = v;
+            self.buf[i] = (u16::from(color.0) << 8) | u16::from(color.1);
         }
         Ok(())
     }
@@ -47,18 +45,10 @@ impl RenderFB for MockDisplay {
     fn render_fb(&mut self, frame: &mut FrameBuffer) -> Result<(), Self::Error> {
         let bbox = Rectangle::new(Point::zero(), frame.size());
         let pixels: Vec<Rgb16> = frame.iter_pairs().flat_map(|(a, b)| [a, b]).collect();
-        for (point, pixel) in bbox.points().zip(pixels) {
+        for (point, color) in bbox.points().zip(pixels) {
             let i = point.y as usize * WIDTH + point.x as usize;
-            let (r, g, b) = pixel.into_rgb();
-            self.buf[i] = pack_rgb(r, g, b);
+            self.buf[i] = (u16::from(color.0) << 8) | u16::from(color.1);
         }
         Ok(())
     }
-}
-
-fn pack_rgb(r: u8, g: u8, b: u8) -> u32 {
-    let r = u32::from(r);
-    let g = u32::from(g);
-    let b = u32::from(b);
-    (r << 16) | (g << 8) | b
 }

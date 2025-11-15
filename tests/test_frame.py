@@ -112,8 +112,8 @@ def test_contains() -> None:
     assert 0x24 not in f
     assert 0x30 not in f
 
-    assert Color(0x22) in f
-    assert Color(0x32) not in f
+    assert Color.from_rgb24(0x22) in f
+    assert Color.from_rgb24(0x32) not in f
     with pytest.raises(TypeError):
         assert '' in f
 

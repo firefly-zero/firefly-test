@@ -10,6 +10,8 @@ def test_colors() -> None:
     app = App('sys.input-test')
     app.start()
     app.update()
+    app.update()
+    app.update()
     allowed_colors = (Color.WHITE, Color.DARK_BLUE, Color.GRAY)
     for color in app.frame:
         assert color in allowed_colors
