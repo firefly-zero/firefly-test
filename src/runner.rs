@@ -1,7 +1,7 @@
 use crate::display::MockDisplay;
 use directories::ProjectDirs;
 use embedded_graphics::pixelcolor::Rgb888;
-use firefly_device::*;
+use firefly_hal::*;
 use firefly_runtime::*;
 use pyo3::exceptions::{PyRuntimeError, PyTypeError};
 use pyo3::prelude::*;

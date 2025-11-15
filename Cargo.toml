@@ -8,7 +8,7 @@ name = "firefly_test"
 crate-type = ["cdylib"]
 
 [dependencies]
-firefly-device = { path = "../firefly/firefly-device" }
+firefly-hal = { path = "../firefly-hal" }
 firefly-runtime = { path = "../firefly/firefly-runtime" }
 
 directories = "5.0.1"
