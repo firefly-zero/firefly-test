@@ -95,7 +95,7 @@ class App:
         if not self._started:
             raise RuntimeError('the app is not started, nothing is displayed')
         buf = self._runner.get_frame()
-        return Frame(buf, width=240)
+        return Frame.from_rgb16(buf, width=240)
 
     def __iter__(self) -> Iterator[Frame]:
         """Start the app if needed and on each iteration cycle update it and get Frame.

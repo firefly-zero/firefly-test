@@ -10,7 +10,7 @@ def get_frame() -> Frame:
         0x10, 0x11, 0x12, 0x13,
         0x20, 0x21, 0x22, 0x23,
     ]
-    return Frame(buf, width=4)
+    return Frame.from_rgb24(buf, width=4)
 
 
 def test_height() -> None:
@@ -45,7 +45,7 @@ def test_get_sub() -> None:
 
 
 def test_to_dict() -> None:
-    f = Frame([91, 92, 93, 92, 94, 91, 92, 95, 95], width=3)
+    f = Frame.from_rgb24([91, 92, 93, 92, 94, 91, 92, 95, 95], width=3)
     d = f.to_dict()
     assert d == {
         91: 2,
@@ -57,7 +57,7 @@ def test_to_dict() -> None:
 
 
 def test_to_set() -> None:
-    f = Frame([91, 92, 93, 92, 94, 91, 92, 95, 95], width=3)
+    f = Frame.from_rgb24([91, 92, 93, 92, 94, 91, 92, 95, 95], width=3)
     s = f.to_set()
     assert s == {91, 92, 93, 94, 95}
 
@@ -98,11 +98,10 @@ def test_read_write_roundtrip() -> None:
 
 def test_iter() -> None:
     buf = [91, 92, 93, 94]
-    f = Frame(buf, width=2)
-    assert list(f) == [91, 92, 93, 94]
+    f = Frame.from_rgb24(buf, width=2)
     for c in f:
         assert type(c) is Color
-        assert 91 <= int(c) <= 94
+        assert 88 <= int(c) <= 94
 
 
 def test_contains() -> None:
@@ -151,8 +150,8 @@ def test_slice() -> None:
 
 def test_eq() -> None:
     buf = [
-        int(Color.BLACK), int(Color.RED), int(Color.GREEN),
-        int(Color.BLUE), int(Color.YELLOW), int(Color.WHITE),
+        Color.BLACK, Color.RED, Color.GREEN,
+        Color.BLUE, Color.YELLOW, Color.WHITE,
     ]
     f = Frame(buf, width=3)
     assert f == f  # noqa: PLR0124

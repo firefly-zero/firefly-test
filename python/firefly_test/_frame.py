@@ -38,15 +38,27 @@ END = '\033[0m'
 
 class Frame:
     __slots__ = ('_buf', '_width')
-    _buf: list[int]
+    _buf: list[Color]
     _width: int
 
-    def __init__(self, buf: list[int], *, width: int) -> None:
-        self._buf = buf
+    def __init__(self, colors: list[Color], *, width: int) -> None:
+        assert type(colors[0]) is Color
         assert 0 <= width <= WIDTH
-        assert 0 < len(buf) <= WIDTH * HEIGHT
-        assert type(buf[0]) is int
+        assert 0 < len(colors) <= WIDTH * HEIGHT
         self._width = width
+        self._buf = colors
+
+    @classmethod
+    def from_rgb16(cls, buf: list[int], *, width: int) -> Self:
+        assert type(buf[0]) is int
+        colors = [Color.from_rgb16(c) for c in buf]
+        return cls(colors, width=width)
+
+    @classmethod
+    def from_rgb24(cls, buf: list[int], *, width: int) -> Self:
+        assert type(buf[0]) is int
+        colors = [Color.from_rgb24(c) for c in buf]
+        return cls(colors, width=width)
 
     @property
     def width(self) -> int:
@@ -66,7 +78,7 @@ class Frame:
             assert 0 <= x < self.width
             assert 0 <= y < self.height
             x = y * self._width + x
-        return Color.from_rgb16(self._buf[x])
+        return self._buf[x]
 
     def get_sub(
         self, *,
@@ -219,7 +231,7 @@ class Frame:
             if len(chunk) != 4:
                 break
             buf.append(int.from_bytes(chunk, _BYTE_ORDER))
-        return cls(buf, width=width)
+        return cls.from_rgb16(buf, width=width)
 
     def write(self, stream: BinaryIO | Path) -> None:
         """Serialize the Frame into a file as a binary.
@@ -231,7 +243,7 @@ class Frame:
         bs = bytearray()
         bs.extend(self._width.to_bytes(2, _BYTE_ORDER))
         for pixel in self._buf:
-            bs.extend(pixel.to_bytes(4, _BYTE_ORDER))
+            bs.extend(pixel._rgb16.to_bytes(4, _BYTE_ORDER))
         stream.write(zlib.compress(bs))
 
     def to_png(self, stream: BinaryIO | Path) -> None:
@@ -254,7 +266,8 @@ class Frame:
         for i in range(0, len(self._buf), self._width):
             bs.append(0)
             for pixel in self._buf[i:i+self._width]:
-                bs.extend(pixel.to_bytes(3, 'big'))
+                rgb24 = (pixel.r << 16) | (pixel.g << 8) | pixel.b
+                bs.extend(rgb24.to_bytes(3, 'big'))
         _write_chunk(stream, b'IDAT', zlib.compress(bs))
         _write_chunk(stream, b'IEND', bytearray())
 
@@ -264,16 +277,16 @@ class Frame:
         Iteration goes left-to-right and top-to-bottom,
         like scanlines in the old CRT displays or how you read English text.
         """
-        return (Color.from_rgb16(pixel) for pixel in self._buf)
+        return iter(self._buf)
 
     def __contains__(self, val: object) -> bool:
         """Check if the Frame contains a pixel of the given Color.
         """
         if isinstance(val, int):
             assert 0x000000 <= val <= 0xFFFFFF
-            return val in self._buf
+            return Color.from_rgb24(val) in self._buf
         if isinstance(val, Color):
-            return val in self.__iter__()
+            return val in self._buf
         t = type(val).__name__
         raise TypeError(f'Frame can contain only Color, not {t}')
 
@@ -297,7 +310,7 @@ class Frame:
             x, y = i.start
             ex, ey = i.stop
             return self.get_sub(x=x, y=y, width=ex - x, height=ey - y)
-        return Color.from_rgb16(self._buf[i])
+        return self._buf[i]
 
     def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
@@ -330,7 +343,7 @@ class Frame:
     def _format_line(self, line_no: int) -> str:
         i = line_no * self._width
         raw_line = self._buf[i:i+self._width]
-        return ''.join(_COLOR_TO_PAT.get(c, '*') for c in raw_line)
+        return ''.join(_COLOR_TO_PAT.get(c._rgb16, '*') for c in raw_line)
 
     def _check_line(self, i: int, pattern: str) -> bool:
         """Check if the given line matches the given pattern.
@@ -343,7 +356,7 @@ class Frame:
         start = i * self._width
         end = start + self._width
         line = self._buf[start:end]
-        return all(Color.from_rgb16(act) == exp for act, exp in zip(line, pattern))
+        return all(act == exp for act, exp in zip(line, pattern))
 
 
 def _write_chunk(out: BinaryIO, chunk_type: bytes, data: bytes) -> None:
