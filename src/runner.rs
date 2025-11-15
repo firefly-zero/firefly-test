@@ -1,6 +1,6 @@
 use crate::display::MockDisplay;
+use crate::runtime::{get_runtime, set_runtime};
 use directories::ProjectDirs;
-use embedded_graphics::pixelcolor::Rgb888;
 use firefly_hal::*;
 use firefly_runtime::*;
 use pyo3::exceptions::{PyRuntimeError, PyTypeError};
@@ -8,9 +8,7 @@ use pyo3::prelude::*;
 use std::path::PathBuf;
 
 #[pyclass(unsendable)]
-pub struct Runner {
-    runtime: Box<Runtime<MockDisplay, Rgb888>>,
-}
+pub struct Runner {}
 
 #[pymethods]
 impl Runner {
@@ -44,28 +42,30 @@ impl Runner {
             Ok(runtime) => runtime,
             Err(err) => return Err(PyRuntimeError::new_err(err.to_string())),
         };
-        let runner = Self {
-            runtime: Box::new(runtime),
-        };
-        Ok(runner)
+
+        set_runtime(runtime);
+        Ok(Self {})
     }
 
     fn start(&mut self) -> PyResult<()> {
-        match self.runtime.start() {
+        let runtime = get_runtime();
+        match runtime.start() {
             Ok(()) => Ok(()),
             Err(err) => Err(PyRuntimeError::new_err(err.to_string())),
         }
     }
 
     fn update(&mut self) -> PyResult<bool> {
-        match self.runtime.update() {
+        let runtime = get_runtime();
+        match runtime.update() {
             Ok(exit) => Ok(exit),
             Err(err) => Err(PyRuntimeError::new_err(err.to_string())),
         }
     }
 
     fn get_frame(&mut self) -> Vec<u32> {
-        self.runtime.display().buf.into()
+        let runtime = get_runtime();
+        runtime.display_mut().buf.into()
     }
 
     fn set_input(&mut self, x: i16, y: i16, b: u8) {
@@ -75,7 +75,8 @@ impl Runner {
             None
         };
         let input = InputState { pad, buttons: b };
-        self.runtime.device_mut().update_input(input)
+        let runtime = get_runtime();
+        runtime.device_mut().update_input(input)
     }
 }
 

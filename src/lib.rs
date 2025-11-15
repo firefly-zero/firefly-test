@@ -1,5 +1,6 @@
 mod display;
 mod runner;
+mod runtime;
 use pyo3::prelude::*;
 
 /// Framework for testing Firefly Zero games.
