@@ -4,6 +4,8 @@ from colorsys import rgb_to_hls, rgb_to_hsv, rgb_to_yiq
 from dataclasses import dataclass
 from typing import ClassVar, Final, Mapping
 
+from . import _rust
+
 
 @dataclass(frozen=True)
 class RGB24:
@@ -18,8 +20,8 @@ class RGB24:
 class Color:
     """An RGB color of a pixel on the Frame.
     """
-    __slots__ = ('_rgb16',)
-    _rgb16: int
+    __slots__ = ('_raw',)
+    _raw: _rust.Color
 
     # Colors from the default color palette (SWEETIE 16)
     # https://lospec.com/palette-list/sweetie-16
@@ -114,34 +116,27 @@ class Color:
 
     @classmethod
     def from_rgb24(cls, raw: int) -> Color:
-        assert 0x000000 <= raw <= 0xFFFFFF
-
+        self = cls()
         r = (raw >> 16) & 0xFF
         g = (raw >> 8) & 0xFF
-        b = (raw >> 8) & 0xFF
-
-        r = r >> 3
-        g = g >> 2
-        b = b >> 3
-        raw = (b << 11) | ((g & 0b_0011_1111) << 5) | (r & 0b_0001_1111)
-        rawb = raw.to_bytes(2, 'little')
-        raw = (int(~rawb[0]) << 8) | int(~rawb[1])
-
-        return cls._from_rgb16(raw)
+        b = raw & 0xFF
+        self._raw = _rust.Color(r, g, b)
+        return self
 
     @classmethod
-    def _from_rgb16(cls, raw: int) -> Color:
-        assert 0x0000 <= raw <= 0xFFFF
+    def from_rgb16(cls, raw: int) -> Color:
         self = cls()
-        self._rgb16 = raw
+        self._raw = _rust.Color.from_rgb16(raw)
         return self
 
     @property
     def _rgb24(self) -> RGB24:
-        r = (self._rgb16 << 3) & 0xFF
-        g = ((self._rgb16 >> 5) << 2) & 0xFF
-        b = ((self._rgb16 >> 11) << 3) & 0xFF
+        r, g, b = self._raw.to_rgb()
         return RGB24(r, g, b)
+
+    @property
+    def _rgb16(self) -> int:
+        return self._raw.to_rgb16()
 
     @property
     def r(self) -> int:

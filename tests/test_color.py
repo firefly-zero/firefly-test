@@ -33,13 +33,17 @@ def test_rgb() -> None:
     assert c.r == 0x00
     assert 252 <= c.g <= 255
     assert c.b == 0x00
-    assert c.rgb == (0., 1., 0.)
+    assert c.rgb[0] == 0
+    assert 0.97 <= c.rgb[1] <= 1.00
+    assert c.rgb[2] == 0
 
     c = Color.TRUE_BLUE
     assert c.r == 0x00
     assert c.g == 0x00
-    assert c.b == 0xFF
-    assert c.rgb == (0., 0., 1.)
+    assert 248 <= c.b <= 255
+    assert c.rgb[0] == 0
+    assert c.rgb[1] == 0
+    assert 0.97 <= c.rgb[2] <= 1.00
 
 
 def test_colorsys() -> None:

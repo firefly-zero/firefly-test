@@ -7,10 +7,10 @@ from ._input import Input
 
 
 __all__ = [
+    'HEIGHT',
+    'WIDTH',
     'App',
     'Color',
     'Frame',
-    'HEIGHT',
     'Input',
-    'WIDTH',
 ]

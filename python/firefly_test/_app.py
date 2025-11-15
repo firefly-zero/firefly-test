@@ -24,12 +24,12 @@ class App:
             If not specified, the global one is detected automatically.
     """
     __slots__ = (
-        '_runner',
-        '_author_id',
         '_app_id',
-        '_vfs_path',
-        '_started',
+        '_author_id',
         '_exited',
+        '_runner',
+        '_started',
+        '_vfs_path',
     )
     _runner: rust.Runner
     _author_id: str

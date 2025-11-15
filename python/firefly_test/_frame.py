@@ -66,7 +66,7 @@ class Frame:
             assert 0 <= x < self.width
             assert 0 <= y < self.height
             x = y * self._width + x
-        return Color._from_rgb16(self._buf[x])
+        return Color.from_rgb16(self._buf[x])
 
     def get_sub(
         self, *,
@@ -264,7 +264,7 @@ class Frame:
         Iteration goes left-to-right and top-to-bottom,
         like scanlines in the old CRT displays or how you read English text.
         """
-        return (Color._from_rgb16(pixel) for pixel in self._buf)
+        return (Color.from_rgb16(pixel) for pixel in self._buf)
 
     def __contains__(self, val: object) -> bool:
         """Check if the Frame contains a pixel of the given Color.
@@ -297,7 +297,7 @@ class Frame:
             x, y = i.start
             ex, ey = i.stop
             return self.get_sub(x=x, y=y, width=ex - x, height=ey - y)
-        return Color._from_rgb16(self._buf[i])
+        return Color.from_rgb16(self._buf[i])
 
     def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
@@ -343,7 +343,7 @@ class Frame:
         start = i * self._width
         end = start + self._width
         line = self._buf[start:end]
-        return all(Color._from_rgb16(act) == exp for act, exp in zip(line, pattern))
+        return all(Color.from_rgb16(act) == exp for act, exp in zip(line, pattern))
 
 
 def _write_chunk(out: BinaryIO, chunk_type: bytes, data: bytes) -> None:

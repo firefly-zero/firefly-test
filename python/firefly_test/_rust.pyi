@@ -1,3 +1,18 @@
+class Color:
+    def __init__(self, r: int, g: int, b: int) -> None:
+        pass
+
+    @staticmethod
+    def from_rgb16(raw: int) -> Color:
+        pass
+
+    def to_rgb16(self) -> int:
+        pass
+
+    def to_rgb(self) -> tuple[int, int, int]:
+        pass
+
+
 class Runner:
     """Manually written type stubs for the Runner. defined in Rust.
 
