@@ -36,12 +36,12 @@ impl Runner {
         };
         let runtime = match Runtime::new(config) {
             Ok(runtime) => runtime,
-            Err(err) => return Err(PyRuntimeError::new_err(err.to_string())),
+            Err(err) => make_error(&err.to_string())?,
         };
 
         let res = set_runtime(runtime);
         if let Err(err) = res {
-            return Err(PyRuntimeError::new_err(err.to_string()));
+            make_error(err)?;
         }
         Ok(Self {})
     }
@@ -49,7 +49,7 @@ impl Runner {
     fn start(&mut self) -> PyResult<()> {
         let runtime = match get_runtime() {
             Ok(runtime) => runtime,
-            Err(err) => return Err(PyRuntimeError::new_err(err.to_string())),
+            Err(err) => make_error(err)?,
         };
         match runtime.start() {
             Ok(()) => Ok(()),
@@ -60,7 +60,7 @@ impl Runner {
     fn update(&mut self) -> PyResult<bool> {
         let runtime = match get_runtime() {
             Ok(runtime) => runtime,
-            Err(err) => return Err(PyRuntimeError::new_err(err.to_string())),
+            Err(err) => make_error(err)?,
         };
         match runtime.update() {
             Ok(exit) => Ok(exit),
@@ -71,7 +71,7 @@ impl Runner {
     fn get_frame(&mut self) -> PyResult<Vec<u16>> {
         let runtime = match get_runtime() {
             Ok(runtime) => runtime,
-            Err(err) => return Err(PyRuntimeError::new_err(err.to_string())),
+            Err(err) => make_error(err)?,
         };
         Ok(runtime.display_mut().buf.into())
     }
@@ -85,7 +85,7 @@ impl Runner {
         let input = InputState { pad, buttons: b };
         let runtime = match get_runtime() {
             Ok(runtime) => runtime,
-            Err(err) => return Err(PyRuntimeError::new_err(err.to_string())),
+            Err(err) => make_error(err)?,
         };
         runtime.device_mut().update_input(input);
         Ok(())
@@ -98,4 +98,8 @@ fn get_vfs_path() -> PathBuf {
         Some(dirs) => dirs.data_dir().to_owned(),
         None => PathBuf::from(".firefly"),
     }
+}
+
+fn make_error<T>(err: &'_ str) -> PyResult<T> {
+    Err(PyRuntimeError::new_err(err.to_string()))
 }
