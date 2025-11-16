@@ -28,5 +28,6 @@ class CLI:
         cmd = [self._bin]
         if self._vfs is not None:
             cmd.extend(['--vfs', str(self._vfs)])
+        cmd.append('build')
         cmd.extend(args)
         subprocess.run(cmd, check=True)
