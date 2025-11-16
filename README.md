@@ -17,7 +17,7 @@ Installation from the source is currently not possible: the project depends on `
 The most popular and simple tool for running Python tests is [pytest](https://docs.pytest.org/en/). Make sure you have it installed:
 
 ```bash
-python3 -m pip install pytest
+python3 -m pip install --break-system-packages pytest
 ```
 
 Tests should be placed in the `tests` directory in the root of the project. Each file with tests should start with `test_`. And each test function also should start with `test_`. For example, create `tests/test_math.py`:
@@ -39,7 +39,7 @@ You can read more in the pytest documentation: [docs.pytest.org](https://docs.py
 
 ## Installing your app
 
-The framework tests not your source code but a compiled and installed app. So, first, make sure to build and install your project:
+The framework tests not your source code but a compiled and installed app. So, make sure to build and install your project:
 
 ```bash
 firefly_cli build
@@ -82,17 +82,17 @@ assert app.frame.at(x=0, y=0) == Color.WHITE
 we can iterate over all pixels and, for example, check that every pixel is one of the 3 expected colors:
 
 ```python
-allowed_colors = (Color.WHITE, Color.LIGHT_GRAY, Color.GRAY)
+allowed_colors = {Color.WHITE, Color.LIGHT_GRAY, Color.GRAY}
 for color in app.frame:
     assert color in allowed_colors
 ```
 
-The `update` method may also accept `Input`. This is the input value that this and all subsequent colors will receive (until overwritten). For example, check that pressing the `A` button changes the color fo the pixel (x=170, y=110) from white to light blue:
+The `update` method may also accept `Input`. This is the input value that this and all subsequent colors will receive (until overwritten). For example, check that pressing the `S` button changes the color fo the pixel (x=185, y=100) from white to light blue:
 
 ```python
-assert app.frame.at(170, 110) == Color.WHITE
-app.update(Input(a=True))
-assert app.frame.at(170, 110) == Color.LIGHT_BLUE
+assert app.frame.at(185, 100) == Color.WHITE
+app.update(Input(s=True))
+assert app.frame.at(185, 100) == Color.LIGHT_BLUE
 ```
 
 You can find this test (and the others covered below) in the [tests/test_integration.py](./tests/test_integration.py) file.
