@@ -11,8 +11,7 @@ def test_colors() -> None:
     app.start()
     app.update()
     app.update()
-    app.update()
-    allowed_colors = (Color.WHITE, Color.DARK_BLUE, Color.GRAY)
+    allowed_colors = (Color.WHITE, Color.BLACK)
     for color in app.frame:
         assert color in allowed_colors
 
@@ -23,29 +22,35 @@ def test_buttons() -> None:
     app = App('sys.input-test')
     app.start()
     app.update()
+    app.update()
     assert app.frame.at(0, 0) == Color.WHITE
 
-    assert app.frame.at(170, 110) == Color.WHITE
-    app.update(Input(a=True))
-    assert app.frame.at(170, 110) == Color.DARK_BLUE
+    assert app.frame.at(185, 100) == Color.WHITE
+    app.update()
+    app.update(Input(s=True))
+    assert app.frame.at(185, 100) == Color.LIGHT_GREEN
 
-    assert app.frame.at(200, 100) == Color.WHITE
-    app.update(Input(b=True))
-    assert app.frame.at(200, 100) == Color.DARK_BLUE
+    assert app.frame.at(205, 80) == Color.WHITE
+    app.update()
+    app.update(Input(e=True))
+    assert app.frame.at(205, 80) == Color.LIGHT_GREEN
 
     assert app.frame.at(170, 80) == Color.WHITE
-    app.update(Input(x=True))
-    assert app.frame.at(170, 80) == Color.DARK_BLUE
+    app.update()
+    app.update(Input(w=True))
+    assert app.frame.at(170, 80) == Color.LIGHT_GREEN
 
-    assert app.frame.at(200, 70) == Color.WHITE
-    app.update(Input(y=True))
-    assert app.frame.at(200, 70) == Color.DARK_BLUE
+    assert app.frame.at(185, 60) == Color.WHITE
+    app.update()
+    app.update(Input(n=True))
+    assert app.frame.at(185, 60) == Color.LIGHT_GREEN
 
+    app.update()
     app.update(Input())
-    assert app.frame.at(170, 110) == Color.WHITE
-    assert app.frame.at(200, 100) == Color.WHITE
+    assert app.frame.at(185, 100) == Color.WHITE
+    assert app.frame.at(205, 80) == Color.WHITE
     assert app.frame.at(170, 80) == Color.WHITE
-    assert app.frame.at(200, 70) == Color.WHITE
+    assert app.frame.at(185, 60) == Color.WHITE
 
 
 def test_button_circle() -> None:
@@ -89,5 +94,5 @@ def test_snapshots() -> None:
     app.update()
     app.frame.assert_match(snapshots / 'default')
 
-    app.update(Input(Pad(30, 40), a=True, b=True, x=True, y=True))
+    app.update(Input(Pad(30, 40), s=True, e=True, w=True, n=True))
     app.frame.assert_match(snapshots / 'all_pressed')

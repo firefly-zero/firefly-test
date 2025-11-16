@@ -27,21 +27,21 @@ class Input:
         self,
         pad: Pad | None = None,
         *,
-        a: bool = False,
-        b: bool = False,
-        x: bool = False,
-        y: bool = False,
+        s: bool = False,
+        e: bool = False,
+        w: bool = False,
+        n: bool = False,
         menu: bool = False,
     ) -> None:
         self._pad = pad
         buttons = 0
-        if a:
+        if s:
             buttons |= 0b1
-        if b:
+        if e:
             buttons |= 0b10
-        if x:
+        if w:
             buttons |= 0b100
-        if y:
+        if n:
             buttons |= 0b1000
         if menu:
             buttons |= 0b10000
