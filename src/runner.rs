@@ -24,13 +24,9 @@ impl Runner {
             ..Default::default()
         };
         let device = DeviceImpl::new(config);
-        let Ok(author_id) = heapless::String::<16>::try_from(author_id.as_str()) else {
-            return Err(PyTypeError::new_err("invalid author_id"));
+        let Some(id) = FullID::from_str(author_id.as_str(), app_id.as_str()) else {
+            return Err(PyTypeError::new_err("invalid author/app ID"));
         };
-        let Ok(app_id) = heapless::String::<16>::try_from(app_id.as_str()) else {
-            return Err(PyTypeError::new_err("invalid app_id"));
-        };
-        let id = FullID::new(author_id, app_id);
         let display = MockDisplay::new();
         let config = RuntimeConfig {
             id: Some(id),
