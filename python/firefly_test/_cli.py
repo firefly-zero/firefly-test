@@ -24,9 +24,6 @@ class CLI:
             root = Path()
         self._run(str(root.resolve()))
 
-    def cheat(self, cmd: int, val: int) -> None:
-        self._run(str(cmd), str(val))
-
     def _run(self, *args: str) -> None:
         cmd = [self._bin]
         if self._vfs is not None:
