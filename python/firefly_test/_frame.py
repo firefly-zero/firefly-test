@@ -269,7 +269,7 @@ class Frame:
                 rgb24 = (pixel.r << 16) | (pixel.g << 8) | pixel.b
                 bs.extend(rgb24.to_bytes(3, 'big'))
         _write_chunk(stream, b'IDAT', zlib.compress(bs))
-        _write_chunk(stream, b'IEND', bytearray())
+        _write_chunk(stream, b'IEND', bytes())
 
     def __iter__(self) -> Iterator[Color]:
         """Iterate over all pixels in the frame.

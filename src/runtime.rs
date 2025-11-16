@@ -12,6 +12,7 @@ static mut RUNTIME: Mutex<Option<MockRuntime>> = Mutex::new(None);
 pub fn set_runtime(runtime: RealRuntime<'static>) -> Result<(), &'static str> {
     unsafe {
         let runtime = MockRuntime::new(runtime);
+        #[allow(static_mut_refs)]
         let Ok(mut cell) = RUNTIME.lock() else {
             return Err("lock is poisoned");
         };
@@ -22,6 +23,7 @@ pub fn set_runtime(runtime: RealRuntime<'static>) -> Result<(), &'static str> {
 
 pub fn get_runtime<'a>() -> Result<&'a mut RealRuntime<'static>, &'static str> {
     unsafe {
+        #[allow(static_mut_refs)]
         let Ok(runtime) = RUNTIME.get_mut() else {
             return Err("lock is poisoned");
         };

@@ -74,7 +74,7 @@ def test_to_set() -> None:
 def test_assert_match__snapshot() -> None:
     f_good = get_frame()
     f_bad = get_frame()
-    f_bad._buf[3] = 0x66
+    f_bad._buf[3] = Color.from_rgb24(0x66)
     snapshot = BytesIO()
     f_good.write(snapshot)
 
