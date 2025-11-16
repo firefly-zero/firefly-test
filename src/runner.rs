@@ -39,7 +39,10 @@ impl Runner {
             Err(err) => return Err(PyRuntimeError::new_err(err.to_string())),
         };
 
-        set_runtime(runtime);
+        let res = set_runtime(runtime);
+        if let Err(err) = res {
+            return Err(PyRuntimeError::new_err(err.to_string()));
+        }
         Ok(Self {})
     }
 

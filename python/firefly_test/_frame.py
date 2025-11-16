@@ -227,8 +227,8 @@ class Frame:
         width = int.from_bytes(decomp_stream.read(2), _BYTE_ORDER)
         buf = []
         while True:
-            chunk = decomp_stream.read(4)
-            if len(chunk) != 4:
+            chunk = decomp_stream.read(2)
+            if len(chunk) != 2:
                 break
             buf.append(int.from_bytes(chunk, _BYTE_ORDER))
         return cls.from_rgb16(buf, width=width)
@@ -243,7 +243,7 @@ class Frame:
         bs = bytearray()
         bs.extend(self._width.to_bytes(2, _BYTE_ORDER))
         for pixel in self._buf:
-            bs.extend(pixel._rgb16.to_bytes(4, _BYTE_ORDER))
+            bs.extend(pixel._rgb16.to_bytes(2, _BYTE_ORDER))
         stream.write(zlib.compress(bs))
 
     def to_png(self, stream: BinaryIO | Path) -> None:
