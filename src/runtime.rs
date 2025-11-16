@@ -20,11 +20,15 @@ pub fn set_runtime(runtime: RealRuntime<'static>) -> Result<(), &'static str> {
     }
 }
 
-pub fn get_runtime<'a>() -> &'a mut RealRuntime<'static> {
+pub fn get_runtime<'a>() -> Result<&'a mut RealRuntime<'static>, &'static str> {
     unsafe {
-        let runtime = RUNTIME.get_mut().unwrap();
-        let runtime = runtime.as_mut().unwrap();
-        &mut runtime.runtime
+        let Ok(runtime) = RUNTIME.get_mut() else {
+            return Err("lock is poisoned");
+        };
+        let Some(runtime) = runtime.as_mut() else {
+            return Err("runtime is not initialized");
+        };
+        Ok(&mut runtime.runtime)
     }
 }
 

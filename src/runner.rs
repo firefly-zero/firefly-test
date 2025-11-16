@@ -47,7 +47,10 @@ impl Runner {
     }
 
     fn start(&mut self) -> PyResult<()> {
-        let runtime = get_runtime();
+        let runtime = match get_runtime() {
+            Ok(runtime) => runtime,
+            Err(err) => return Err(PyRuntimeError::new_err(err.to_string())),
+        };
         match runtime.start() {
             Ok(()) => Ok(()),
             Err(err) => Err(PyRuntimeError::new_err(err.to_string())),
@@ -55,27 +58,37 @@ impl Runner {
     }
 
     fn update(&mut self) -> PyResult<bool> {
-        let runtime = get_runtime();
+        let runtime = match get_runtime() {
+            Ok(runtime) => runtime,
+            Err(err) => return Err(PyRuntimeError::new_err(err.to_string())),
+        };
         match runtime.update() {
             Ok(exit) => Ok(exit),
             Err(err) => Err(PyRuntimeError::new_err(err.to_string())),
         }
     }
 
-    fn get_frame(&mut self) -> Vec<u16> {
-        let runtime = get_runtime();
-        runtime.display_mut().buf.into()
+    fn get_frame(&mut self) -> PyResult<Vec<u16>> {
+        let runtime = match get_runtime() {
+            Ok(runtime) => runtime,
+            Err(err) => return Err(PyRuntimeError::new_err(err.to_string())),
+        };
+        Ok(runtime.display_mut().buf.into())
     }
 
-    fn set_input(&mut self, x: i16, y: i16, b: u8) {
+    fn set_input(&mut self, x: i16, y: i16, b: u8) -> PyResult<()> {
         let pad = if x == 0xFF && y == 0xFF {
             Some(Pad { x, y })
         } else {
             None
         };
         let input = InputState { pad, buttons: b };
-        let runtime = get_runtime();
-        runtime.device_mut().update_input(input)
+        let runtime = match get_runtime() {
+            Ok(runtime) => runtime,
+            Err(err) => return Err(PyRuntimeError::new_err(err.to_string())),
+        };
+        runtime.device_mut().update_input(input);
+        Ok(())
     }
 }
 
