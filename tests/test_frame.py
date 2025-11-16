@@ -45,21 +45,30 @@ def test_get_sub() -> None:
 
 
 def test_to_dict() -> None:
-    f = Frame.from_rgb24([91, 92, 93, 92, 94, 91, 92, 95, 95], width=3)
+    given = [0x08, 0x10, 0x28, 0x10, 0x30, 0x08, 0x10, 0x18, 0x18]
+    f = Frame.from_rgb24(given, width=3)
     d = f.to_dict()
     assert d == {
-        91: 2,
-        92: 3,
-        93: 1,
-        94: 1,
-        95: 2,
+        Color.from_rgb24(0x08): 2,
+        Color.from_rgb24(0x10): 3,
+        Color.from_rgb24(0x18): 2,
+        Color.from_rgb24(0x28): 1,
+        Color.from_rgb24(0x30): 1,
     }
 
 
 def test_to_set() -> None:
-    f = Frame.from_rgb24([91, 92, 93, 92, 94, 91, 92, 95, 95], width=3)
-    s = f.to_set()
-    assert s == {91, 92, 93, 94, 95}
+    given = [0x08, 0x10, 0x28, 0x10, 0x30, 0x08, 0x10, 0x18, 0x18]
+    f = Frame.from_rgb24(given, width=3)
+    act = f.to_set()
+    exp = {
+        Color.from_rgb24(0x08),
+        Color.from_rgb24(0x10),
+        Color.from_rgb24(0x18),
+        Color.from_rgb24(0x28),
+        Color.from_rgb24(0x30),
+    }
+    assert act == exp
 
 
 def test_assert_match__snapshot() -> None:
@@ -78,7 +87,7 @@ def test_assert_match__snapshot() -> None:
 
 
 def test_assert_match__pattern() -> None:
-    buf = [int(Color.BLACK), int(Color.RED), int(Color.GREEN)]
+    buf = [Color.BLACK, Color.RED, Color.GREEN]
     f = Frame(buf, width=3)
     f.assert_match('K')
     with pytest.raises(AssertionError):
@@ -108,7 +117,7 @@ def test_contains() -> None:
     f = get_frame()
     assert 0x01 in f
     assert 0x23 in f
-    assert 0x24 not in f
+    assert 0x28 not in f
     assert 0x30 not in f
 
     assert Color.from_rgb24(0x22) in f
