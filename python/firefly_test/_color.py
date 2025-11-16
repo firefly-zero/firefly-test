@@ -93,7 +93,8 @@ class Color:
     """The dark gray color from the default palette (SWEETIE-16): #333C57.
     """
 
-    # The extreme colors useful for debugging.
+    # Extreme colors. Useful for debugging.
+
     TRUE_BLACK: ClassVar[Color]
     """Purely black color: #000000.
     """
@@ -116,6 +117,13 @@ class Color:
 
     @classmethod
     def from_rgb24(cls, raw: int) -> Color:
+        """Create a new color from a true-color RGB representation.
+
+        For example, 0x00FF00 represents pure green.
+
+        Keep in mind that internally the color in Firefly is represented as
+        16 bits, not 24, so some precision is lost in conversions.
+        """
         self = cls()
         r = (raw >> 16) & 0xFF
         g = (raw >> 8) & 0xFF
@@ -124,7 +132,7 @@ class Color:
         return self
 
     @classmethod
-    def from_rgb16(cls, raw: int) -> Color:
+    def _from_rgb16(cls, raw: int) -> Color:
         self = cls()
         self._raw = _rust.Color.from_rgb16(raw)
         return self
@@ -170,7 +178,8 @@ class Color:
 
         https://en.wikipedia.org/wiki/RGB_color_model
         """
-        return (self.r / 255, self.g / 255, self.b / 255)
+        rgb = self._rgb24
+        return (rgb.r / 255, rgb.g / 255, rgb.b / 255)
 
     @property
     def hls(self) -> tuple[float, float, float]:
@@ -180,7 +189,8 @@ class Color:
 
         https://en.wikipedia.org/wiki/HSL_and_HSV
         """
-        return rgb_to_hls(self.r / 255, self.g / 255, self.b / 255)
+        rgb = self._rgb24
+        return rgb_to_hls(rgb.r / 255, rgb.g / 255, rgb.b / 255)
 
     @property
     def hsv(self) -> tuple[float, float, float]:
@@ -190,7 +200,8 @@ class Color:
 
         https://en.wikipedia.org/wiki/HSL_and_HSV
         """
-        return rgb_to_hsv(self.r / 255, self.g / 255, self.b / 255)
+        rgb = self._rgb24
+        return rgb_to_hsv(rgb.r / 255, rgb.g / 255, rgb.b / 255)
 
     @property
     def yiq(self) -> tuple[float, float, float]:
@@ -198,7 +209,8 @@ class Color:
 
         https://en.wikipedia.org/wiki/YIQ
         """
-        return rgb_to_yiq(self.r / 255, self.g / 255, self.b / 255)
+        rgb = self._rgb24
+        return rgb_to_yiq(rgb.r / 255, rgb.g / 255, rgb.b / 255)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, str):

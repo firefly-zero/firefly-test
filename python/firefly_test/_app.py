@@ -72,6 +72,9 @@ class App:
         """Run a single update cycle: call `update`, maybe `render`, render menu, etc.
 
         If no input provided, the old input stays active.
+
+        Raises:
+            ExitedError:
         """
         if not self._started:
             raise RuntimeError('app must be started before it can be updated')
@@ -95,7 +98,7 @@ class App:
         if not self._started:
             raise RuntimeError('the app is not started, nothing is displayed')
         buf = self._runner.get_frame()
-        return Frame.from_rgb16(buf, width=240)
+        return Frame._from_rgb16(buf, width=240)
 
     def __iter__(self) -> Iterator[Frame]:
         """Start the app if needed and on each iteration cycle update it and get Frame.
@@ -110,4 +113,5 @@ class App:
             yield self.frame
 
     def __repr__(self) -> str:
-        return f'{type(self).__name__}({self._app_id!r})'
+        id = f'{self._author_id}.{self._app_id}'
+        return f"{type(self).__name__}('{id}')"

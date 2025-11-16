@@ -45,13 +45,14 @@ class Frame:
         assert type(colors[0]) is Color
         assert 0 <= width <= WIDTH
         assert 0 < len(colors) <= WIDTH * HEIGHT
+        assert len(colors) % width == 0
         self._width = width
         self._buf = colors
 
     @classmethod
-    def from_rgb16(cls, buf: list[int], *, width: int) -> Self:
+    def _from_rgb16(cls, buf: list[int], *, width: int) -> Self:
         assert type(buf[0]) is int
-        colors = [Color.from_rgb16(c) for c in buf]
+        colors = [Color._from_rgb16(c) for c in buf]
         return cls(colors, width=width)
 
     @classmethod
@@ -231,7 +232,7 @@ class Frame:
             if len(chunk) != 2:
                 break
             buf.append(int.from_bytes(chunk, _BYTE_ORDER))
-        return cls.from_rgb16(buf, width=width)
+        return cls._from_rgb16(buf, width=width)
 
     def write(self, stream: BinaryIO | Path) -> None:
         """Serialize the Frame into a file as a binary.
@@ -325,7 +326,7 @@ class Frame:
             return True
         if isinstance(other, type(self)):
             if self._width != other._width:
-                raise TypeError('can compare only frames of the same width')
+                raise TypeError('can only compare frames of the same width')
             return self._buf == other._buf
         return NotImplemented
 
@@ -341,6 +342,8 @@ class Frame:
         return len(self._buf)
 
     def _format_line(self, line_no: int) -> str:
+        """Represent the given line as a pattern.
+        """
         i = line_no * self._width
         raw_line = self._buf[i:i+self._width]
         return ''.join(_COLOR_TO_PAT.get(c._rgb16, '*') for c in raw_line)
