@@ -4,7 +4,7 @@ from ._app import App
 from ._cli import CLI
 from ._color import Color
 from ._frame import HEIGHT, WIDTH, Frame
-from ._input import Input
+from ._input import Input, Pad
 
 
 __all__ = [
@@ -15,4 +15,5 @@ __all__ = [
     'Color',
     'Frame',
     'Input',
+    'Pad',
 ]

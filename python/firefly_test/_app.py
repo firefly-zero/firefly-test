@@ -6,7 +6,7 @@ from typing import Iterator
 import firefly_test._rust as rust
 
 from ._frame import Frame
-from ._input import Input
+from ._input import Input, Pad
 
 
 class ExitedError(Exception):
@@ -81,11 +81,14 @@ class App:
         if self._exited:
             raise RuntimeError('trying to update exited app')
         if input is not None:
-            self._runner.set_input(
-                x=input._pad._x if input._pad else 0xFF,
-                y=input._pad._y if input._pad else 0xFF,
-                b=input._buttons,
-            )
+            if isinstance(input, Pad):
+                self._runner.set_input(x=input._x, y=input._y, b=0)
+            else:
+                self._runner.set_input(
+                    x=input._pad._x,
+                    y=input._pad._y,
+                    b=input._buttons,
+                )
         exit = self._runner.update()
         if exit:
             self._exited = True

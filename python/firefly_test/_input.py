@@ -13,14 +13,14 @@ class Pad:
     _y: int
 
     def __init__(self, x: int, y: int) -> None:
-        assert 0 <= x <= 1000
-        assert 0 <= y <= 1000
+        assert -1000 <= x <= 1000
+        assert -1000 <= y <= 1000
         self._x = x
         self._y = y
 
 
 class Input:
-    _pad: Pad | None
+    _pad: Pad
     _buttons: int
 
     def __init__(
@@ -33,6 +33,8 @@ class Input:
         n: bool = False,
         menu: bool = False,
     ) -> None:
+        if pad is None:
+            pad = Pad(x=0xFF, y=0xFF)
         self._pad = pad
         buttons = 0
         if s:
@@ -48,6 +50,9 @@ class Input:
         self._buttons = buttons
 
     def __or__(self, other: Self) -> Self:
-        res = type(self)(self._pad or other._pad)
+        pad = self._pad
+        if pad._x == 0xFF:
+            pad = other._pad
+        res = type(self)(pad)
         res._buttons = self._buttons | other._buttons
         return res

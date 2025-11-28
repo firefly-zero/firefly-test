@@ -2,8 +2,7 @@
 """
 from pathlib import Path
 
-from firefly_test import App, Color, Input
-from firefly_test._input import Pad
+from firefly_test import App, Color, Input, Pad
 
 
 def test_colors() -> None:
