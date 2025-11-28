@@ -10,7 +10,6 @@ def test_colors() -> None:
     app = App('sys.input-test')
     app.start()
     app.update()
-    app.update()
     allowed_colors = (Color.WHITE, Color.BLACK)
     for color in app.frame:
         assert color in allowed_colors
@@ -22,30 +21,24 @@ def test_buttons() -> None:
     app = App('sys.input-test')
     app.start()
     app.update()
-    app.update()
     assert app.frame.at(0, 0) == Color.WHITE
 
     assert app.frame.at(185, 100) == Color.WHITE
-    app.update()
     app.update(Input(s=True))
     assert app.frame.at(185, 100) == Color.LIGHT_GREEN
 
     assert app.frame.at(205, 80) == Color.WHITE
-    app.update()
     app.update(Input(e=True))
     assert app.frame.at(205, 80) == Color.LIGHT_GREEN
 
     assert app.frame.at(170, 80) == Color.WHITE
-    app.update()
     app.update(Input(w=True))
     assert app.frame.at(170, 80) == Color.LIGHT_GREEN
 
     assert app.frame.at(185, 60) == Color.WHITE
-    app.update()
     app.update(Input(n=True))
     assert app.frame.at(185, 60) == Color.LIGHT_GREEN
 
-    app.update()
     app.update(Input())
     assert app.frame.at(185, 100) == Color.WHITE
     assert app.frame.at(205, 80) == Color.WHITE
@@ -58,7 +51,6 @@ def test_button_circle() -> None:
     """
     app = App('sys.input-test')
     app.start()
-    app.update()
     app.update()
     circle = app.frame.get_sub(x=177, y=92, width=25, height=25)
     circle.assert_match("""
@@ -100,5 +92,6 @@ def test_snapshots() -> None:
     app.update()
     app.frame.assert_match(snapshots / 'default')
 
-    app.update(Input(Pad(30, 40), s=True, e=True, w=True, n=True))
+    input = Input(Pad(30, 40), s=True, e=True, w=True, n=True)
+    app.update(input)
     app.frame.assert_match(snapshots / 'all_pressed')

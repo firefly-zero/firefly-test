@@ -69,7 +69,7 @@ class App:
         self._runner.start()
 
     def update(self, input: Input | None = None) -> None:
-        """Run a single update cycle: call `update`, maybe `render`, render menu, etc.
+        """Run a single update cycle: call `update`, `render`, render menu, etc.
 
         If no input provided, the old input stays active.
 

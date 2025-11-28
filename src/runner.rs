@@ -62,6 +62,7 @@ impl Runner {
             Ok(runtime) => runtime,
             Err(err) => make_error(err)?,
         };
+        runtime.set_render_every(1);
         match runtime.update() {
             Ok(exit) => Ok(exit),
             Err(err) => Err(PyRuntimeError::new_err(err.to_string())),
