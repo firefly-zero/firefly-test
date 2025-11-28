@@ -79,9 +79,9 @@ impl Runner {
 
     fn set_input(&mut self, x: i16, y: i16, b: u8) -> PyResult<()> {
         let pad = if x == 0xFF && y == 0xFF {
-            Some(Pad { x, y })
-        } else {
             None
+        } else {
+            Some(Pad { x, y })
         };
         let input = InputState { pad, buttons: b };
         let runtime = match get_runtime() {

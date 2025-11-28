@@ -91,6 +91,6 @@ def test_snapshots() -> None:
     app.update()
     app.frame.assert_match(snapshots / 'default')
 
-    input = Input(Pad(30, 40), s=True, e=True, w=True, n=True)
+    input = Input(Pad(-300, -400), s=True, e=True, w=True, n=True)
     app.update(input)
     app.frame.assert_match(snapshots / 'all_pressed')
