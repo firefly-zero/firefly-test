@@ -22,12 +22,11 @@ class CLI:
     def build(self, root: Path | None = None) -> None:
         if root is None:
             root = Path()
-        self._run(str(root.resolve()))
+        self._run('build', '--no-tip', str(root.resolve()))
 
     def _run(self, *args: str) -> None:
         cmd = [self._bin]
         if self._vfs is not None:
             cmd.extend(['--vfs', str(self._vfs)])
-        cmd.append('build')
         cmd.extend(args)
         subprocess.run(cmd, check=True)
