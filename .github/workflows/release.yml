@@ -42,7 +42,11 @@ jobs:
         run: sudo apt-get install -y libasound2-dev libudev-dev
       - run: pip install 'maturin[patchelf]'
       - shell: bash
-        run: maturin build --release --target=${{ matrix.job.target }}
+        run: >
+          maturin build 
+          --release 
+          --target      ${{ matrix.job.target }} 
+          --interpreter $(which python3)
       - uses: actions/upload-artifact@v4
         with:
           name: wheels-linux-${{ matrix.job.target }}
