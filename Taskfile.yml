@@ -20,20 +20,22 @@ tasks:
       - task: install-maturin
       - .venv/bin/maturin develop --extras test,lint
 
+  release:
+    cmds:
+      - test {{.CLI_ARGS}}
+      - grep -F '"{{.CLI_ARGS}}"' Cargo.toml
+      - git tag {{.CLI_ARGS}}
+      - git push
+      - git push --tags
+
   build:
     env:
       PATH: $PATH:.venv/bin
     cmds:
       - task: install-maturin
       - >
-        bash -c
-        "
-        PATH=$PATH:.venv/bin
-        .venv/bin/maturin build
-        --release
-        --locked
-        --compatibility=pypi
-        "
+        bash -c " PATH=$PATH:.venv/bin .venv/bin/maturin build --release
+        --locked --compatibility=pypi "
 
   format:
     cmds:
