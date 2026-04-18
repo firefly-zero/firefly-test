@@ -1009,7 +1009,7 @@ dependencies = [
 
 [[package]]
 name = "firefly-test"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "directories",
  "embedded-graphics",
