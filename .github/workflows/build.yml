@@ -1,10 +1,9 @@
-name: release
+name: build
 
 on:
   push:
     tags:
       - "*"
-  pull_request:
 
 permissions:
   contents: read
@@ -39,11 +38,10 @@ jobs:
         run: sudo apt-get install -y libasound2-dev libudev-dev
       - run: pip install 'maturin[patchelf]'
       - shell: bash
-        run: >
-          maturin build --release --target=${{ matrix.job.target }}
+        run: maturin build --release --target=${{ matrix.job.target }}
       - uses: actions/upload-artifact@v4
         with:
-          name: wheels-linux-${{ matrix.job.target }}
+          name: wheels-${{ matrix.job.target }}
           path: target/wheels
 
   build-sdist:
@@ -59,10 +57,8 @@ jobs:
           name: wheels-sdist
           path: dist
 
-  release:
+  publish:
     runs-on: ubuntu-latest
-    if: ${{ startsWith(github.ref, 'refs/tags/') || github.event_name ==
-      'workflow_dispatch' }}
     needs:
       - build
       - build-sdist
@@ -75,14 +71,12 @@ jobs:
       - uses: actions/attest-build-provenance@v2
         with:
           subject-path: "wheels-*/*"
-      - if: ${{ startsWith(github.ref, 'refs/tags/') }}
-        uses: PyO3/maturin-action@v1
+      - uses: PyO3/maturin-action@v1
         env:
           MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
         with:
           command: upload
           args: --non-interactive --skip-existing wheels-*/*
-      - if: ${{ startsWith(github.ref, 'refs/tags/') }}
-        uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
