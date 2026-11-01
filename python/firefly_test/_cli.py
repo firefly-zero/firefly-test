@@ -24,6 +24,9 @@ class CLI:
             root = Path()
         self._run('build', '--no-tip', str(root.resolve()))
 
+    def install(self, id: str) -> None:
+        self._run('import', id)
+
     def _run(self, *args: str) -> None:
         cmd = [self._bin]
         if self._vfs is not None:
