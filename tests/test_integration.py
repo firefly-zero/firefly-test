@@ -39,19 +39,19 @@ def test_buttons(app: App) -> None:
 
     assert app.frame.at(185, 100) == Color.WHITE
     app.update(Input(s=True))
-    assert app.frame.at(185, 100) == Color.LIGHT_GREEN
+    assert app.frame.at(185, 100) == Color.GREEN
 
     assert app.frame.at(205, 80) == Color.WHITE
     app.update(Input(e=True))
-    assert app.frame.at(205, 80) == Color.LIGHT_GREEN
+    assert app.frame.at(205, 80) == Color.GREEN
 
     assert app.frame.at(170, 80) == Color.WHITE
     app.update(Input(w=True))
-    assert app.frame.at(170, 80) == Color.LIGHT_GREEN
+    assert app.frame.at(170, 80) == Color.GREEN
 
     assert app.frame.at(185, 60) == Color.WHITE
     app.update(Input(n=True))
-    assert app.frame.at(185, 60) == Color.LIGHT_GREEN
+    assert app.frame.at(185, 60) == Color.GREEN
 
     app.update(Input())
     assert app.frame.at(185, 100) == Color.WHITE
