@@ -25,7 +25,7 @@ class Runner:
         self,
         author_id: str,
         app_id: str,
-        vfs_path: str,
+        vfs: str,
     ) -> None:
         """Initalizes the Runner and the wrapped Runtime.
 

@@ -11,15 +11,15 @@ from pytest import fixture
 @fixture(scope='module')
 def vfs() -> Iterator[Path]:
     with TemporaryDirectory() as tmp_dir:
-        vfs_path = Path(tmp_dir) / 'vfs'
-        cli = CLI(vfs=vfs_path)
+        vfs = Path(tmp_dir) / 'vfs'
+        cli = CLI(vfs=vfs)
         cli.install('sys.input-test')
-        yield vfs_path
+        yield vfs
 
 
 @fixture
 def app(vfs: Path) -> App:
-    app = App('sys.input-test', vfs_path=vfs)
+    app = App('sys.input-test', vfs=vfs)
     app.start()
     return app
 

@@ -13,11 +13,11 @@ pub struct Runner {}
 #[pymethods]
 impl Runner {
     #[new]
-    fn new(author_id: String, app_id: String, vfs_path: String) -> PyResult<Self> {
-        let vfs_path: PathBuf = if vfs_path.is_empty() {
+    fn new(author_id: String, app_id: String, vfs: String) -> PyResult<Self> {
+        let vfs_path: PathBuf = if vfs.is_empty() {
             get_vfs_path()
         } else {
-            vfs_path.into()
+            vfs.into()
         };
         let config = DeviceConfig {
             root: vfs_path,

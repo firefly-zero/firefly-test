@@ -20,7 +20,7 @@ class App:
 
     Args:
         id: the full ID of the app. For example, "lux.snek".
-        vfs_path: optional Path to the virtual FS root.
+        vfs: optional Path to the virtual FS root.
             If not specified, the global one is detected automatically.
     """
     __slots__ = (
@@ -29,19 +29,17 @@ class App:
         '_exited',
         '_runner',
         '_started',
-        '_vfs_path',
     )
     _runner: rust.Runner
     _author_id: str
     _app_id: str
-    _vfs_path: Path
     _started: bool
     _exited: bool
 
     def __init__(
         self,
         id: str | tuple[str, str],
-        vfs_path: Path | None = None,
+        vfs: Path | None = None,
     ) -> None:
         if isinstance(id, str):
             left, sep, right = id.partition('.')
@@ -55,7 +53,7 @@ class App:
         self._runner = rust.Runner(
             author_id=self._author_id,
             app_id=self._app_id,
-            vfs_path=str(vfs_path.resolve()) if vfs_path else '',
+            vfs=str(vfs.resolve()) if vfs else '',
         )
 
     def start(self) -> None:
