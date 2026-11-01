@@ -29,7 +29,7 @@ impl Runner {
         };
         let display = MockDisplay::new();
         let config = RuntimeConfig {
-            id: Some(id),
+            next: NextApp::ID(id),
             device,
             display,
             net_handler: NetHandler::None,

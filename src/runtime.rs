@@ -1,8 +1,8 @@
 use crate::display::MockDisplay;
 use firefly_runtime::{Rgb16, Runtime};
-use std::sync::Mutex;
+use std::{convert::Infallible, sync::Mutex};
 
-type RealRuntime<'a> = Runtime<'a, MockDisplay, Rgb16>;
+type RealRuntime<'a> = Runtime<'a, MockDisplay, Rgb16, Infallible>;
 
 /// A global Runtime instance.
 ///

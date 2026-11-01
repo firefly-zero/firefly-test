@@ -39,7 +39,7 @@ impl DrawTarget for MockDisplay {
     }
 }
 
-impl RenderFB for MockDisplay {
+impl FireflyDisplay for MockDisplay {
     type Error = Infallible;
 
     fn render_fb(&mut self, frame: &mut FrameBuffer) -> Result<(), Self::Error> {
@@ -50,5 +50,13 @@ impl RenderFB for MockDisplay {
             self.buf[i] = (u16::from(color.0) << 8) | u16::from(color.1);
         }
         Ok(())
+    }
+
+    fn rotate(&mut self, rotate: bool) {
+        _ = rotate
+    }
+
+    fn set_brightness(&mut self, brightness: u8) {
+        _ = brightness
     }
 }
